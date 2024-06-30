@@ -1,0 +1,14 @@
+---
+export const prerender = true;
+
+import Layout from '~/layouts/PageLayout.astro';
+import SearchComponent from '~/components/SearchComponent.astro';
+
+const metadata = {
+  title: 'Login',
+};
+---
+
+<Layout metadata={metadata}>
+  <SearchComponent />
+</Layout>

@@ -1,0 +1,15 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import QuizCreatorComponent from '../../../components/core/QuizCreatorComponent';
+
+// initial astro quiz
+export const prerender = true;
+---
+
+<PageLayout metadata={{ title: 'Quiz Creator' }}>
+  <div class="container mx-auto">
+    <h1 class="text-3xl font-bold text-center mt-8">Enhance Your Learning Journey with Our Quiz Creator!</h1>
+
+    <QuizCreatorComponent client:load />
+  </div>
+</PageLayout>

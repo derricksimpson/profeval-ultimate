@@ -1,0 +1,217 @@
+---
+import { getAsset, getPermalink } from '~/utils/permalinks';
+
+export const headerData = {
+  links: [
+    {
+      text: 'Homes',
+      links: [
+        {
+          text: 'Old Index',
+          href: getPermalink('/homes/index_legacy'),
+        },
+        {
+          text: 'SaaS',
+          href: getPermalink('/homes/saas_legacy'),
+        },
+        {
+          text: 'Startup',
+          href: getPermalink('/homes/startup_legacy'),
+        },
+
+        {
+          text: 'Personal',
+          href: getPermalink('/homes/personal_legacy'),
+        },
+      ],
+    },
+    {
+      text: 'Learn',
+      links: [
+        {
+          text: 'JavaScript',
+          href: getPermalink('/learn/javascript/'),
+        },
+        {
+          text: 'TypeScript',
+          href: getPermalink('/learn/typescript/'),
+        },
+        {
+          text: 'SQL',
+          href: getPermalink('/learn/sql/'),
+        },
+      ],
+    },
+    {
+      text: 'Landing',
+      links: [
+        {
+          text: 'Lead Generation',
+          href: getPermalink('/landing/lead-generation'),
+        },
+        {
+          text: 'Long-form Sales',
+          href: getPermalink('/landing/sales'),
+        },
+        {
+          text: 'Click-Through',
+          href: getPermalink('/landing/click-through'),
+        },
+        {
+          text: 'Product Details (or Services)',
+          href: getPermalink('/landing/product'),
+        },
+        {
+          text: 'Coming Soon or Pre-Launch',
+          href: getPermalink('/landing/pre-launch'),
+        },
+        {
+          text: 'Subscription',
+          href: getPermalink('/landing/subscription'),
+        },
+      ],
+    },
+  ],
+  actions: [
+    { text: 'Login', variant: 'secondary', href: '/login', target: '_blank' },
+    { text: 'Sign Up', variant: 'primary', href: '/signup', target: '_blank' },
+  ],
+};
+
+export const footerData = {
+  links: [
+    {
+      title: 'Product',
+      links: [
+        { text: 'Features', href: '#' },
+        { text: 'Security', href: '#' },
+        { text: 'Team', href: '#' },
+        { text: 'Customer stories', href: '#' },
+        { text: 'Pricing', href: '#' },
+        { text: 'Resources', href: '#' },
+      ],
+    },
+    {
+      title: 'Languages',
+      links: [
+        { text: 'JavaScript', href: '#' },
+        { text: 'TypeScript', href: '#' },
+        { text: 'Python', href: '#' },
+        { text: 'SQL', href: '#' },
+        { text: 'C#', href: '#' },
+      ],
+    },
+    {
+      title: 'Support',
+      links: [
+        { text: 'Docs', href: '#' },
+        { text: 'Community Forum', href: '#' },
+        { text: 'Professional Services', href: '#' },
+        { text: 'Skills', href: '#' },
+        { text: 'Status', href: '#' },
+      ],
+    },
+    {
+      title: 'Company',
+      links: [
+        { text: 'About', href: '#' },
+        { text: 'Blog', href: '#' },
+        { text: 'Careers', href: '#' },
+        { text: 'Press', href: '#' },
+        { text: 'Inclusion', href: '#' },
+        { text: 'Social Impact', href: '#' },
+        { text: 'Shop', href: '#' },
+      ],
+    },
+  ],
+  secondaryLinks: [
+    { text: 'Terms', href: getPermalink('/terms') },
+    { text: 'Privacy Policy', href: getPermalink('/privacy') },
+  ],
+  socialLinks: [
+    { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
+    { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
+    { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
+    { ariaLabel: 'Github', icon: 'tabler:brand-github', href: '#' },
+  ],
+  footNote: `©2024 - SimpliInc. All rights reserved. `,
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Header and Footer Links</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .section {
+        padding: 20px;
+        background: #f8f8f8;
+      }
+      .container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .column {
+        flex: 1 1 30%;
+        margin: 10px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .column h2 {
+        margin-top: 0;
+      }
+      .column a {
+        display: block;
+        color: #0073e6;
+        text-decoration: none;
+        margin: 5px 0;
+      }
+      .column a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">
+        {
+          headerData.links.map((section) => (
+            <div class="column">
+              <h2>{section.text}</h2>
+              {section.links.map((link) => (
+                <a href={link.href}>{link.text}</a>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        {
+          footerData.links.map((section) => (
+            <div class="column">
+              <h2>{section.title}</h2>
+              {section.links.map((link) => (
+                <a href={link.href}>{link.text}</a>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </body>
+</html>

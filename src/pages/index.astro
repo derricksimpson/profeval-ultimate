@@ -1,0 +1,90 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import Features from '~/components/widgets/Features.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Stats from '~/components/widgets/Stats.astro';
+
+export const prerender = true;
+
+const metadata = {
+  title: 'SimpliCode — Learn new coding skills in record time with our AI Powered platform',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Widget ******************* -->
+
+  <Hero
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Try Now!',
+        href: '/learn/sql',
+
+        icon: 'tabler:arrows-split',
+      },
+      { text: 'Learn more', href: '#features' },
+    ]}
+  >
+    <Fragment slot="title">Search or Create evaluations for your professors online. </Fragment>
+  </Hero>
+
+  />
+
+  <!-- Content Widget **************** -->
+
+  <!-- FAQs Widget ******************* -->
+
+  <FAQs
+    title="Frequently Asked Questions"
+    subtitle="Discover the features and benefits of our online professor evaluation platform."
+    tagline="FAQs"
+    classes={{ container: 'max-w-6xl' }}
+    items={[
+      {
+        title: 'Why choose our platform?',
+        description:
+          'Our platform provides a reliable and secure environment for students to evaluate professors anonymously. With AI-driven tools that enhance clarity and appropriateness of comments, we promote a healthy and honest feedback system that benefits both students and educators.',
+      },
+      {
+        title: 'How do I create an evaluation?',
+        description:
+          'Creating an evaluation is simple. Sign up for an account, select the professor you want to evaluate, and fill out the evaluation form. Our AI will assist you in crafting clear and constructive feedback.',
+      },
+      {
+        title: 'Are my evaluations anonymous?',
+        description:
+          'Yes, all evaluations are anonymous. Your identity is protected, allowing you to provide honest and candid feedback without any concerns about confidentiality.',
+      },
+      {
+        title: 'How does AI help with evaluations?',
+        description:
+          'Our AI tools assist you in writing your evaluations by providing suggestions for clear and constructive feedback. Additionally, AI helps review comments to ensure they are appropriate and aligned with our guidelines.',
+      },
+      {
+        title: 'How are professors protected?',
+        description:
+          'We have strict guidelines and moderation policies in place to ensure that all feedback remains respectful and constructive. Our platform aims to create a fair environment for both students and professors.',
+      },
+      {
+        title: 'What safeguards are in place for comments?',
+        description:
+          'Our platform employs moderation policies and user guidelines to maintain a respectful environment. All comments are reviewed for compliance with our standards, ensuring a fair and respectful evaluation process.',
+      },
+      {
+        title: 'How can I trust the evaluations?',
+        description:
+          'We verify user identities and ensure that only students who have taken a course with the professor can submit evaluations. This helps maintain the credibility and accuracy of the feedback provided.',
+      },
+      {
+        title: 'What makes our platform unique?',
+        description:
+          'Our platform stands out due to its commitment to integrity and respect. The use of advanced AI to enhance clarity and appropriateness in evaluations ensures that feedback is both helpful and appropriate. Join our community and contribute to a positive and constructive evaluation culture.',
+      },
+    ]}
+  />
+
+  <!-- CallToAction Widget *********** -->
+</Layout>

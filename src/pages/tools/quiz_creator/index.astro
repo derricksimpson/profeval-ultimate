@@ -1,0 +1,24 @@
+---
+import PageLayout from '../../../layouts/PageLayout.astro';
+import QuizCreatorComponent from '../../../components/core/QuizCreatorComponent';
+
+// initial astro quiz
+export const prerender = true;
+---
+
+<PageLayout metadata={{ title: 'Quiz Creator' }}>
+  <div class="container mx-auto">
+    <h1 class="text-3xl font-bold text-center mt-8">Enhance Your Learning Journey with Our Quiz Creator!</h1>
+
+    <p class="m-12 mt-20">
+      Our quiz creator empowers you to design, edit, collaborate, and practice like never before! Work together! Share
+      your quizzes with colleagues and friends, fostering teamwork and enriching the learning experience. Practice Makes
+      Perfect: Want to ace that upcoming test? Our quiz creator doubles as a powerful practice tool. Take your quizzes
+      repeatedly, track your progress, and master the material!
+    </p>
+
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      <a href="/tools/quiz_creator/edit">Create a Quiz!</a>
+    </button>
+  </div>
+</PageLayout>

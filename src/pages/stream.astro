@@ -1,0 +1,29 @@
+---
+export const prerender = true;
+
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Login',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="flex justify-center items-center">
+    <div class="mt-8 mb-8 p-8 rounded border border-gray-200 dark:border-gray-700 shadow-md w-full max-w-md">
+      <h1 class="text-2xl font-bold mb-6 text-center">Stream</h1>
+    </div>
+  </section>
+
+  <script>
+    function inputEl(id: string) {
+      return document.getElementById(id) as HTMLInputElement;
+    }
+
+    const websocket = new WebSocket('wss://websocket-example.signalnerve.workers.dev');
+    websocket.addEventListener('message', (event) => {
+      console.log('Message received from server');
+      console.log(event.data);
+    });
+  </script>
+</Layout>

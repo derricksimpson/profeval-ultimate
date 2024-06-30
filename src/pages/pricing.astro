@@ -1,0 +1,116 @@
+---
+export const prerender = true;
+
+import Layout from '~/layouts/PageLayout.astro';
+import Prices from '~/components/widgets/Pricing.astro';
+
+const metadata = {
+  title: 'Pricing',
+};
+---
+
+<Layout metadata={metadata}>
+  <Prices
+    title="Pricing"
+    subtitle="Choose the perfect plan that aligns with your  goals, with additional savings for yearly plans."
+    prices={[
+      {
+        title: 'Free',
+        subtitle: 'Try It Out: Demo for getting started.',
+        price: 'Free',
+        yearlyPrice: 0,
+        savingsPercent: 0,
+        period: 'per month',
+        items: [
+          {
+            description: 'Limited access to basic courses',
+          },
+          {
+            description: 'Limited to intro lesson only',
+          },
+          {
+            description: 'Limited to 5 A.I. interactions/day',
+          },
+        ],
+        callToAction: {
+          text: 'Demo Now',
+          href: '#',
+        },
+      },
+      {
+        title: 'Basic',
+        subtitle: 'Great for casual learners',
+        price: 4.99,
+        yearlyPrice: 49.99,
+        savingsPercent: 17,
+        period: 'per month',
+        items: [
+          {
+            description: 'Full access to standard courses',
+          },
+          {
+            description: 'Real-time coding exercises',
+          },
+          {
+            description: 'Basic AI feedback',
+          },
+        ],
+        callToAction: {
+          text: 'Get started',
+          href: '#',
+        },
+      },
+      {
+        title: 'Pro',
+        subtitle: 'Perfect for serious learners',
+        price: 9.99,
+        yearlyPrice: 99.99,
+        savingsPercent: 17,
+        period: 'per month',
+        items: [
+          {
+            description: 'Access to full course catalog',
+          },
+          {
+            description: 'Enhanced AI feedback',
+          },
+          {
+            description: 'Advanced coding challenges',
+          },
+        ],
+        callToAction: {
+          text: 'Get started',
+          href: '#',
+        },
+        hasRibbon: true,
+        ribbonTitle: 'popular',
+      },
+      {
+        title: 'Premium',
+        subtitle: 'Best for career advancement',
+        price: 14.99,
+        yearlyPrice: 149.99,
+        savingsPercent: 17,
+        period: 'per month',
+        items: [
+          {
+            description: 'Customizable AI learning paths',
+          },
+          {
+            description: 'Resume Tayloring',
+          },
+          {
+            description: 'Interview Prep',
+          },
+          {
+            description: 'Premium support',
+          },
+        ],
+        callToAction: {
+          text: 'Get started',
+          href: '#',
+        },
+      },
+    ]}
+  />
+</Layout>
