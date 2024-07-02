@@ -1,65 +1,10 @@
 import { getPermalink } from './utils/permalinks';
-// List of all US states
-const states = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
-];
+
 export const headerData = {
   links: [
     {
-      text: 'State',
-      links: states.map((state) => ({
-        text: state,
-        href: `/state/${state.toLowerCase().replace(/ /g, '-')}/`,
-      })),
+      text: 'States',
+      href: '/states',
     },
     {
       text: 'Create',
@@ -73,17 +18,20 @@ export const headerData = {
       text: 'Tools',
       links: [
         {
-          text: 'Quiz Builder',
-          href: getPermalink('/quiz_builer'),
+          text: 'Quiz Creator',
+          href: '/tools/quiz_creator',
+        },
+        {
+          text: 'Test Creator',
+          href: '/tools/test_creator',
         },
         {
           text: 'Skills (Learning Paths)',
-          href: getPermalink('/learn/typescript/'),
+          href: '/learn/typescript/',
         },
       ],
     },
   ],
-  actions: [{ text: 'Search', variant: 'secondary', href: 'javascript:alert("hi")' }],
 };
 
 export const footerData = {
@@ -94,7 +42,6 @@ export const footerData = {
         { text: 'Features', href: '#' },
         { text: 'Security', href: '#' },
         { text: 'Team', href: '#' },
-        { text: 'Customer stories', href: '#' },
         { text: 'Pricing', href: '#' },
         { text: 'Resources', href: '#' },
       ],
@@ -110,22 +57,11 @@ export const footerData = {
       ],
     },
     {
-      title: 'Support',
+      title: 'Tools',
       links: [
-        { text: 'Docs', href: '#' },
-        { text: 'Community Forum', href: '#' },
-        { text: 'Professional Services', href: '#' },
-        { text: 'Skills', href: '#' },
-        { text: 'Status', href: '#' },
-      ],
-    },
-    {
-      title: 'Company',
-      links: [
-        { text: 'About', href: '#' },
-        { text: 'Blog', href: '#' },
-        { text: 'Careers', href: '#' },
-        { text: 'Press', href: '#' },
+        { text: 'Quiz Creator', href: '#' },
+        { text: 'Test Creator', href: '#' },
+        { text: 'Test Practice', href: '#' },
       ],
     },
   ],
@@ -140,5 +76,5 @@ export const footerData = {
 
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: '#' },
   ],
-  footNote: `©2024 - SimpliInc. All rights reserved. `,
+  footNote: `©2024 - Profeval. All rights reserved. `,
 };

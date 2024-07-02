@@ -1,0 +1,32 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import { type School } from '~/models/School';
+
+import { stateById } from '~/data/states';
+
+const { id } = Astro.params;
+let state = stateById(id);
+const DB = Astro.locals.runtime.env.DB;
+
+let response = await DB.prepare('SELECT * FROM Schools where RegionId = ? order by name').bind(id).all();
+let schools = response.results as Array<School>;
+---
+
+<PageLayout metadata={{ title: 'State' }}>
+  <div class="container mx-auto mb-12">
+    <h1 class="text-2xl mt-2 mb-4 inline-block">Schools in {state.name}</h1>
+
+    {
+      schools.map((school) => (
+        <a
+          href={`/school/${school.Name.replace(/'\\ '/, '-')}/${school.ID}`}
+          class="block border border-gray-200 p-2 mt-2"
+        >
+          <h2 class=" ">
+            {school.Name} ({school.abbr})
+          </h2>
+        </a>
+      ))
+    }
+  </div>
+</PageLayout>

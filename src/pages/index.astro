@@ -1,9 +1,7 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import Hero from '~/components/widgets/Hero.astro';
-import Features from '~/components/widgets/Features.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import Stats from '~/components/widgets/Stats.astro';
+import SearchComponent from '~/components/SearchComponent.astro';
 
 export const prerender = true;
 
@@ -14,28 +12,7 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <!-- Hero Widget ******************* -->
-
-  <Hero
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Try Now!',
-        href: '/learn/sql',
-
-        icon: 'tabler:arrows-split',
-      },
-      { text: 'Learn more', href: '#features' },
-    ]}
-  >
-    <Fragment slot="title">Search or Create evaluations for your professors online. </Fragment>
-  </Hero>
-
-  />
-
-  <!-- Content Widget **************** -->
-
-  <!-- FAQs Widget ******************* -->
+  <SearchComponent />
 
   <FAQs
     title="Frequently Asked Questions"
@@ -73,18 +50,6 @@ const metadata = {
         description:
           'Our platform employs moderation policies and user guidelines to maintain a respectful environment. All comments are reviewed for compliance with our standards, ensuring a fair and respectful evaluation process.',
       },
-      {
-        title: 'How can I trust the evaluations?',
-        description:
-          'We verify user identities and ensure that only students who have taken a course with the professor can submit evaluations. This helps maintain the credibility and accuracy of the feedback provided.',
-      },
-      {
-        title: 'What makes our platform unique?',
-        description:
-          'Our platform stands out due to its commitment to integrity and respect. The use of advanced AI to enhance clarity and appropriateness in evaluations ensures that feedback is both helpful and appropriate. Join our community and contribute to a positive and constructive evaluation culture.',
-      },
     ]}
   />
-
-  <!-- CallToAction Widget *********** -->
 </Layout>

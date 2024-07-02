@@ -17,6 +17,9 @@ module.exports = {
         serif: ['var(--aw-font-serif, ui-serif)', ...defaultTheme.fontFamily.serif],
         heading: ['var(--aw-font-heading, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
       },
+      screens: {
+        mid: '1000',
+      },
     },
   },
   plugins: [typographyPlugin],

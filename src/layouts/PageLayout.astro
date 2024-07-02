@@ -16,7 +16,7 @@ const { metadata } = Astro.props;
 const headerOptions = {
   isSticky: true,
   showRssFeed: false,
-  showToggleTheme: true,
+  showToggleTheme: false,
 };
 ---
 
@@ -25,9 +25,9 @@ const headerOptions = {
     <!-- <Announcement /> -->
   </slot>
   <slot name="header">
-    <Header {...headerData} {...headerOptions} />
+    <Header {...headerData} {...headerOptions} actions={[{ text: 'Search', variant: 'secondary', href: '#' }]} />
   </slot>
-  <main>
+  <main class="mb-12">
     <slot />
   </main>
   <slot name="footer">

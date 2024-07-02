@@ -21,10 +21,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 - New code added by Derrick Simpson
-- /Components/Core/Notebook
-- Proprietary Software License
+- /Components/Core/
+- All Professor Evaluation Pages, Models, Services, and Related Code
 
-Certainly! Below is an exhaustive closed-source license agreement designed to restrict anyone from obtaining, reverse engineering, scraping, or otherwise distributing your code in any form.
+- Proprietary Software License
 
 ---
 

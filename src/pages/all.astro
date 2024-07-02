@@ -1,0 +1,49 @@
+---
+export const prerender = true;
+
+import TableComponent from '~/components/core/TableComponent';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Blank',
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="container mx-auto">
+    <h1 class="text-3xl font-bold text-center mt-8">Blank</h1>
+    <p class="text-center mt-4">This is a blank page.</p>
+    <div class="border border-gray-200 p-4 mt-4">
+      <h2 class="text-xl font-bold">Blank</h2>
+      <p>Blank</p>
+    </div>
+
+    <!-- card -->
+    <div class="max-w-sm w-full lg:max-w-full lg:flex mt-4">
+      <div class="border border-gray-200 p-4 flex flex-col justify-between leading-normal">
+        <div class="mb-8">
+          <p class="text-sm flex items-center">Blank</p>
+          <div class="font-bold text-xl mb-2">Blank</div>
+          <p class="text-base">Blank</p>
+        </div>
+        <div class="flex items-center">
+          <div class="text-sm">
+            <p class="leading-none">Blank</p>
+            <p class="">Blank</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- sample buttons -->
+    <div class="mt-4">
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Button</button>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Button</button>
+    </div>
+
+    <!-- Table Component -->
+    <TableComponent />
+
+    <div class="mt-6"></div>
+  </div>
+</Layout>

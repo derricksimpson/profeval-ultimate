@@ -1,0 +1,34 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import LettersComponent from '~/components/core/LettersComponent';
+import TableComponent from '~/components/core/TableComponent';
+
+import { getProfessorsBySchoolAndLetter } from '~/service/professor-service';
+
+const { path } = Astro.params;
+const [schoolName, schoolId, letter] = path.split('/');
+
+const metadata = {
+  title: 'Professors at ' + schoolName + ' - Rate My Professor Here',
+  description: 'Rate your professors at ' + schoolName + ' and help other students stay informed informed.',
+};
+
+let professors = [];
+
+if (letter) {
+  professors = await getProfessorsBySchoolAndLetter(Astro, Number(schoolId), letter);
+}
+---
+
+<Layout metadata={metadata}>
+  <div class="container mx-auto">
+    <h1 class="text-3xl font-bold mt-8">{schoolName}</h1>
+
+    <p class="mt-4">Choose a letter to search by last name</p>
+    <div class="mt-4">
+      <LettersComponent schoolId={schoolId} schoolName={schoolName} activeLetter={letter} />
+    </div>
+
+    <TableComponent schoolId={Number(schoolId)} schoolName={schoolName} professors={professors} />
+  </div>
+</Layout>
