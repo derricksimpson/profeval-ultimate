@@ -2,73 +2,17 @@
 export const prerender = false;
 
 import Layout from '~/layouts/PageLayout.astro';
-import SearchComponent from '~/components/SearchComponent.astro';
-import { getSearchResults } from '~/service/evaluation-service';
+import SearchComponent from '~/components/SearchComponent2';
 
 const { url } = Astro;
 const searchParams = url.searchParams;
 const searchString = searchParams.get('q');
 
 const metadata = {
-  title: `Search Results for "${searchString || ''}"`,
+  title: `Search to Rate your professor - Search Results for "${searchString || ''}"`,
 };
-
-let [schoolResults, professorResults] = [[], []];
-
-try {
-  if (searchString) {
-    [schoolResults, professorResults] = await getSearchResults(Astro, searchString);
-  }
-} catch (e) {
-  console.error('Error fetching search results:', e);
-}
 ---
 
 <Layout metadata={metadata}>
-  <SearchComponent initialQuery={searchString} />
-
-  {
-    searchString ? (
-      <div>
-        <h2>Search Results for "{searchString}"</h2>
-        {schoolResults.length > 0 ? (
-          <div>
-            {schoolResults.length > 0 && (
-              <div>
-                <h3>Schools</h3>
-                <ul>
-                  {schoolResults.map((school) => (
-                    <li>
-                      <a href={`${school.ID}`}>
-                        {school.Name} ({school.abbr}) {school.keyword_matches}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {professorResults.length > 0 && (
-              <div>
-                <h3>Professors</h3>
-                <ul>
-                  {professorResults.map((professor) => (
-                    <li>
-                      <a href={`${professor.ID}`}>
-                        {professor.LName}, {professor.FName}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ) : (
-          <p>No results found for "{searchString}".</p>
-        )}
-      </div>
-    ) : (
-      <p>Enter a search query to see results.</p>
-    )
-  }
+  <SearchComponent client:load initialQuery={searchString} />
 </Layout>
