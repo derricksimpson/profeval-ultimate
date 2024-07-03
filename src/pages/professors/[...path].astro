@@ -19,9 +19,8 @@ let professors = [];
 
 let evaluations = await getEvaluationsForProfessor(Astro, Number(professorId), 1000000);
 
-let evaluation = evaluations[0];
+let eval1 = evaluations[0];
 
-console.log(evaluation);
 // if (letter) {
 //   professors = await getProfessorsEvaluations(Astro, Number(professorId), letter);
 // }
@@ -31,7 +30,11 @@ console.log(evaluation);
 
 <Layout metadata={metadata}>
   <div class="container mx-auto mt-5">
-    <h1 class="text-3xl font-bold mt-5">{school_name}</h1>
+    <h1 class="text-xl font-bold mt-5">
+      {school_name} / <a class="underline" href={`/school/${school_name}/${schoolId}/E`}>E</a> / <span
+        class="font-normal">{eval1?.FName} {eval1?.LName}</span
+      >
+    </h1>
     <div class="mt-5 border border-gray-100 rounded-lg shadow-md">
       <ProfessorCardComponent evaluations={evaluations} />
 
