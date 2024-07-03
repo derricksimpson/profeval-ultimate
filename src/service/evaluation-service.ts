@@ -9,16 +9,6 @@ export const getEvaluationsBySchoolLetter = async (Astro, id: number, letter: st
   let evaluations = response.results as Array<Evaluation>;
 };
 
-function generateWhereClause(columns, keywords) {
-  const conditions = [];
-  for (const column of columns) {
-    for (const keyword of keywords) {
-      conditions.push(`${column} LIKE ?`);
-    }
-  }
-  return conditions.join(' OR ');
-}
-
 async function searchSchools(db, keywords) {
   function generateWhereClauseAndCount(columns, keywords) {
     const conditions = [];
@@ -69,14 +59,24 @@ async function searchSchools(db, keywords) {
           keyword_matches DESC;
   `;
 
-  console.log('query:', query);
-  console.log('params:', params);
+  // console.log('query:', query);
+  // console.log('params:', params);
 
   const response = await db
     .prepare(query)
     .bind(...params)
     .all();
   return response?.results.map((result) => ({ ...result, result_type: 'school' }));
+}
+
+function generateWhereClause(columns, keywords) {
+  const conditions = [];
+  for (const column of columns) {
+    for (const keyword of keywords) {
+      conditions.push(`${column} LIKE ?`);
+    }
+  }
+  return conditions.join(' OR ');
 }
 
 async function searchProfessors(db, keywords) {
@@ -86,7 +86,7 @@ async function searchProfessors(db, keywords) {
 
   const query = `SELECT id, lname, fname FROM professors WHERE ${whereClause};`;
 
-  const params = keywords.flatMap((keyword) => Array(columns.length).fill(`%${keyword}%`));
+  const params = keywords.flatMap((keyword) => Array(columns.length).fill(`${keyword}%`));
 
   const response = await db
     .prepare(query)
