@@ -16,6 +16,9 @@ npx wrangler login
 npx wrangler d1 create prod-profeval
 
 npx wrangler d1 execute prod-profeval --local --file=./data/profeval.sql
+
+npx wrangler d1 execute prod-profeval --local --file=./data/indexes.sql
+
 ```
 
 ### VAlidate data locally
