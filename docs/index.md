@@ -23,3 +23,9 @@ npx wrangler d1 execute prod-profeval --local --file=./data/profeval.sql
 ```bash
 npx wrangler d1 execute prod-profeval --local --command="SELECT * FROM Schools"
 ```
+
+# Deploy NEW to Cloudflare (WARNING - thiw will overwrite all existing data)
+
+```bash
+ wrangler d1 execute prod-profeval --remote --file=./data/profeval.sql
+```
