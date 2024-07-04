@@ -3,12 +3,20 @@ import React from 'react';
 interface GradeDialProps {
   label: string;
   percentage: number;
-  value?: string;
+  textValue?: string;
+  value?: number;
   invert?: boolean;
   borderClass?: string;
 }
 
-const UltimateDialComponent: React.FC<GradeDialProps> = ({ label, value, percentage, invert, borderClass }) => {
+const UltimateDialComponent: React.FC<GradeDialProps> = ({
+  label,
+  textValue,
+  value,
+  percentage,
+  invert,
+  borderClass,
+}) => {
   // Determine the color class based on the percentage
   let colorClass;
   let lightColorClass;
@@ -27,6 +35,16 @@ const UltimateDialComponent: React.FC<GradeDialProps> = ({ label, value, percent
     colorClass = 'bg-red-500';
     lightColorClass = 'bg-red-100';
   }
+  let hasData = true;
+
+  if (value <= 0) {
+    textValue = 'No Data';
+    percentage = 0;
+    hasData = false;
+    lightColorClass = 'bg-gray-100';
+  } else {
+    percentage = Math.max(2, percentage);
+  }
 
   return (
     <div className={`flex items-center py-3 ${borderClass} border-gray-100`}>
@@ -34,12 +52,12 @@ const UltimateDialComponent: React.FC<GradeDialProps> = ({ label, value, percent
       <div className="space-y-3 flex-1">
         <div className="flex items-center">
           <h4 className="font-medium text-sm mr-auto text-gray-700 flex items-center">{label}</h4>
-          <span className="px-2 py-1 rounded-lg bg-gray-50  font-medium text-sm">{value}</span>
+          <span className="px-2 py-1 rounded-lg bg-gray-50  font-medium text-sm">{textValue}</span>
         </div>
 
         <div style={{ width: `${percentage}%` }} className={`text-right h-0 rounded-full w-full relative`}>
-          <div className="relative" style={{ left: '2px', top: '-9px' }}>
-            v
+          <div title={`${value?.toFixed(2)}`} className="relative h-2" style={{ left: '2px', top: '-9px' }}>
+            {hasData && 'v'}
           </div>
         </div>
         <div className={`overflow-hidden ${lightColorClass} h-1.5 rounded-full w-full `}>
