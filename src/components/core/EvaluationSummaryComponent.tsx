@@ -35,10 +35,15 @@ const EvaluationSummaryComponent: React.FC<EvaluationSummaryProps> = ({ evaluati
 
           return (
             <div key={idx} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md shadow">
-              <p className="text-md font-medium mb-2">
-                {evaluation.Subject}-{evaluation.CallNumber} : {evaluation.CourseTitle} -{' '}
-                <span className="font-normal">Posted on {evaluation.PostDate}</span>
-              </p>
+              <div className="flex justify-between items-center">
+                <p className="text-md font-medium mb-2">
+                  {evaluation.Subject}-{evaluation.CallNumber} : {evaluation.CourseTitle} -{' '}
+                  <span className="font-normal">Posted on {evaluation.PostDate}</span>
+                </p>
+                <a href={`/evaluation/${evaluation.ID}`} className="btn-secondary font-bold py-2 px-4 rounded">
+                  View Details
+                </a>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
                 <div>
                   <strong>Overall Rating:</strong> {Icon(evalData?.o)} {ratingOptions[evalData.o]}
