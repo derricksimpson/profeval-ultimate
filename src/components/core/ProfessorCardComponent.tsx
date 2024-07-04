@@ -17,7 +17,8 @@ const difficultyOptions = ['Not Specified', 'Easy', 'Moderate', 'Difficult'];
 interface AverageScale {
   field: string;
   percentage: number;
-  value: string;
+  textValue: string;
+  value: number;
 }
 
 const gradeMapping = {
@@ -29,17 +30,17 @@ const gradeMapping = {
 };
 
 const getGrade = (grade: number): AverageScale => {
-  let value;
+  let textValue;
   if (grade >= 3.5) {
-    value = 'A';
+    textValue = 'A';
   } else if (grade >= 2.5) {
-    value = 'B';
+    textValue = 'B';
   } else if (grade >= 1.5) {
-    value = 'C';
+    textValue = 'C';
   } else if (grade >= 0.5) {
-    value = 'D';
+    textValue = 'D';
   } else {
-    value = 'F';
+    textValue = 'F';
   }
 
   // Calculate the percentage as per the 0-4 scale
@@ -47,59 +48,65 @@ const getGrade = (grade: number): AverageScale => {
 
   return {
     field: 'grade',
+    value: grade,
     percentage: percentage,
-    value: value,
+    textValue: textValue,
   };
 };
 
 const getOverall = (overall: number): AverageScale => {
-  let label;
-  if (overall <= 1) {
-    label = 'Good';
-  } else if (overall > 1 && overall <= 2) {
-    label = 'OK';
+  let textValue;
+  if (overall <= 1.2) {
+    textValue = 'Good';
+  } else if (overall > 1.2 && overall <= 2.2) {
+    textValue = 'OK';
   } else if (overall > 2) {
-    label = 'Poor';
+    textValue = 'Poor';
   }
   return {
     field: 'overallRating',
+    value: overall,
     percentage: ((3 - overall) / 2) * 100,
-    value: label,
+    textValue: textValue,
   };
 };
 
 const getNotes = (notes: number): AverageScale => {
-  let label;
+  let textValue;
   if (notes > 2) {
-    label = 'Overkill';
-  } else if (notes > 1 && notes <= 2) {
-    label = 'Moderate';
-  } else {
-    label = 'Few/None';
+    textValue = 'Overkill';
+  } else if (notes >= 1 && notes <= 2) {
+    textValue = 'Moderate';
+  } else if (notes > 0 && notes < 1) {
+    textValue = 'Not Specified';
   }
 
   return {
     field: 'notes',
+    value: notes,
     percentage: (notes / 3) * 100,
-    value: label,
+    textValue: textValue,
   };
 };
 
 const getDifficulty = (difficulty: number): AverageScale => {
-  let label;
+  let textValue;
+
   if (difficulty > 2 && difficulty <= 3) {
-    label = 'Difficult';
-  } else if (difficulty >= 1 && difficulty <= 2) {
-    label = 'Moderate';
-  } else if (difficulty === 1) {
-    label = 'Easy';
+    textValue = 'Difficult';
+  } else if (difficulty > 1 && difficulty <= 2) {
+    textValue = 'Moderate';
+  } else if (difficulty > 0 && difficulty <= 1) {
+    textValue = 'Easy';
   } else {
-    label = 'Not Specified';
+    textValue = 'Not Specified';
   }
+
   return {
     field: 'difficulty',
+    value: difficulty,
     percentage: (difficulty / 3) * 100,
-    value: label,
+    textValue: textValue,
   };
 };
 
@@ -135,8 +142,9 @@ const getAverageScale = (evaluations: Evaluation[], field: keyof EvaluationData)
     default:
       return {
         field: field as string,
-        percentage: 0,
-        value: 'Not Specified',
+        value: -1,
+        percentage: -1,
+        textValue: 'Not Specified',
       };
   }
 };
@@ -168,6 +176,7 @@ const ProfessorCardComponent: React.FC<ProfessorCardProps> = ({ evaluations }) =
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <UltimateDialComponent
+                textValue={averageOverall.textValue}
                 value={averageOverall.value}
                 percentage={averageOverall.percentage}
                 label="Overall Rating"
@@ -175,6 +184,7 @@ const ProfessorCardComponent: React.FC<ProfessorCardProps> = ({ evaluations }) =
             </div>
             <div>
               <UltimateDialComponent
+                textValue={averageGrade.textValue}
                 value={averageGrade.value}
                 percentage={averageGrade.percentage}
                 label="Grade Received"
@@ -187,6 +197,7 @@ const ProfessorCardComponent: React.FC<ProfessorCardProps> = ({ evaluations }) =
                 borderClass="border-t"
                 invert
                 value={averageDifficulty.value}
+                textValue={averageDifficulty.textValue}
                 percentage={averageDifficulty.percentage}
                 label="Course Difficulty"
               />
@@ -196,6 +207,7 @@ const ProfessorCardComponent: React.FC<ProfessorCardProps> = ({ evaluations }) =
                 borderClass="border-t"
                 invert
                 value={averageNotes.value}
+                textValue={averageNotes.textValue}
                 percentage={averageNotes.percentage}
                 label="Quantity of Notes"
               />
