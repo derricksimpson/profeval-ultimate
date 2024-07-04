@@ -1,7 +1,7 @@
+compatibility_flags = ["streams_enable_constructors"]
+
 name = "profeval"
 pages_build_output_dir = "./dist"
-compatibility_flags = ["nodejs_compat"]
-
 [[d1_databases]]
 binding = "DB"
 database_name = "prod-profeval"
