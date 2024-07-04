@@ -10,7 +10,7 @@ interface Props {
 
 export default ({ schoolId, schoolName, activeLetter }: Props) => {
   const [pages, setPages] = useState(letters);
-  const [currentPage, setCurrentPage] = useState(activeLetter || 'A');
+  const [currentPage, setCurrentPage] = useState(activeLetter);
 
   let href = `/school/${schoolName}/${schoolId}/`;
 
@@ -23,7 +23,7 @@ export default ({ schoolId, schoolName, activeLetter }: Props) => {
               <a
                 href={href + item}
                 aria-current={currentPage == item ? 'page' : false}
-                className={`h-10 px-4 py-2 border ${idx ? 'border-l-0' : ''} duration-150 hover:text-indigo-600 hover:bg-indigo-50 ${currentPage == item ? 'bg-indigo-50 text-indigo-600 font-medium' : ''}`}
+                className={`h-10 px-4 py-2 border ${idx ? 'border-l-0' : ''} duration-150  ${currentPage == item ? 'bg-gray-300 font-medium' : 'hover:bg-gray-100'}`}
               >
                 {item}
               </a>
@@ -42,7 +42,7 @@ export default ({ schoolId, schoolName, activeLetter }: Props) => {
                   <a
                     href={href + item}
                     aria-current={currentPage === item ? 'page' : undefined}
-                    className={` h-10 px-4 py-3 border border-l-0 duration-150 hover:text-indigo-600 hover:bg-indigo-50 ${currentPage === item ? 'bg-indigo-50 text-indigo-600 font-medium' : ''}`}
+                    className={` h-10 px-4 py-3 border border-l-0 duration-150 hover:bg-indigo-50 ${currentPage === item ? 'bg-indigo-50  font-medium' : ''}`}
                   >
                     {item}
                   </a>
@@ -57,7 +57,7 @@ export default ({ schoolId, schoolName, activeLetter }: Props) => {
                   <a
                     href={href + item}
                     aria-current={currentPage === item ? 'page' : undefined}
-                    className={` h-10 px-4 py-3 border border-l-0 duration-150 hover:text-indigo-600 hover:bg-indigo-50 ${currentPage === item ? 'bg-indigo-50 text-indigo-600 font-medium' : ''}`}
+                    className={` h-10 px-4 py-3 border border-l-0 duration-150 hover:bg-indigo-50 ${currentPage === item ? 'bg-indigo-50 font-medium' : ''}`}
                   >
                     {item}
                   </a>
