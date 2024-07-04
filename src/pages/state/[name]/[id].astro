@@ -12,7 +12,7 @@ let response = await DB.prepare('SELECT * FROM Schools where RegionId = ? order 
 let schools = response.results as Array<School>;
 ---
 
-<PageLayout metadata={{ title: 'State' }}>
+<PageLayout metadata={{ title: 'Colleges, Universities, and Technical or Community Colleges in' + state.name }}>
   <div class="container mx-auto mb-12">
     <h1 class="text-2xl mt-2 mb-4 inline-block">Schools in {state.name}</h1>
 

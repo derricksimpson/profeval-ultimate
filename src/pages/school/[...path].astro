@@ -4,9 +4,11 @@ import LettersComponent from '~/components/core/LettersComponent';
 import TableComponent from '~/components/core/TableComponent';
 
 import { getProfessorsBySchoolAndLetter } from '~/service/professor-service';
+import { getAllSubjects } from '~/service/evaluation-service';
+import SearchCourses from '~/components/SearchCourses';
 
 const { path } = Astro.params;
-const [schoolName, schoolId, letter] = path.split('/');
+const [schoolName, schoolIdStr, letter] = path.split('/');
 
 const metadata = {
   title: 'Professors at ' + schoolName + ' - Rate My Professor Here',
@@ -14,6 +16,12 @@ const metadata = {
 };
 
 let professors = [];
+let schoolId = Number(schoolIdStr);
+
+let courseSubjects = null;
+if (schoolId) {
+  courseSubjects = await getAllSubjects(Astro, schoolId);
+}
 
 if (letter) {
   professors = await getProfessorsBySchoolAndLetter(Astro, Number(schoolId), letter);
@@ -24,11 +32,20 @@ if (letter) {
   <div class="container mx-auto">
     <h1 class="text-3xl font-bold mt-8">{schoolName}</h1>
 
-    <p class="mt-4">Choose a letter to search by last name</p>
+    <h2 class="mt-4 font-bold">Search Professor by last name</h2>
     <div class="mt-4">
-      <LettersComponent schoolId={schoolId} schoolName={schoolName} activeLetter={letter} />
+      <LettersComponent schoolId={schoolIdStr} schoolName={schoolName} activeLetter={letter} />
     </div>
 
-    <TableComponent schoolId={Number(schoolId)} schoolName={schoolName} professors={professors} />
+    <SearchCourses
+      schoolId={schoolId}
+      courseSubjects={courseSubjects}
+      onSearch={(x, n) => {
+        alert(x + n);
+      }}
+      client:load
+    />
+
+    {letter && <TableComponent schoolId={Number(schoolId)} schoolName={schoolName} professors={professors} />}
   </div>
 </Layout>

@@ -6,7 +6,7 @@ import SearchComponent from '~/components/SearchComponent2';
 
 const { url } = Astro;
 const searchParams = url.searchParams;
-const searchString = searchParams.get('q');
+const searchString = searchParams.get('for');
 
 const metadata = {
   title: `Search to Rate your professor - Search Results for "${searchString || ''}"`,

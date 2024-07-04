@@ -9,7 +9,7 @@ export const getEvaluationsBySchoolLetter = async (Astro, id: number, letter: st
   let evaluations = response.results as Array<Evaluation>;
 };
 
-async function searchSchools(db, keywords) {
+async function searchSchools2(db, keywords) {
   function generateWhereClauseAndCount(columns, keywords) {
     const conditions = [];
     const caseParams = [];
@@ -20,7 +20,7 @@ async function searchSchools(db, keywords) {
       const likePattern = `%${keyword}%`;
       for (const column of columns) {
         // Add conditions for LIKE
-        conditions.push(`${column} LIKE ?`);
+        conditions.push(`(${column} LIKE ?)`);
         conditionParams.push(likePattern);
 
         // Determine score multiplier
@@ -45,6 +45,7 @@ async function searchSchools(db, keywords) {
 
   const columns = ['name', 'abbr'];
   const { whereClause, countClause, params } = generateWhereClauseAndCount(columns, keywords);
+
   const query = `
       SELECT 
           id AS ID, 
@@ -59,14 +60,60 @@ async function searchSchools(db, keywords) {
           keyword_matches DESC;
   `;
 
-  // console.log('query:', query);
-  // console.log('params:', params);
+  console.log('query:', query);
+  console.log('params:', params);
 
   const response = await db
     .prepare(query)
     .bind(...params)
     .all();
+
+  console.log('response:', response);
+
   return response?.results.map((result) => ({ ...result, result_type: 'school' }));
+}
+
+// Function to search the school table
+async function searchSchools(db, searchText: string[]) {
+  const keywords = searchText.map((keyword) => `%${keyword}%`);
+  const conditions: string[] = [];
+  const parameters: string[] = [];
+
+  keywords.forEach((keyword) => {
+    conditions.push(`
+          (CASE 
+              WHEN name = ? THEN 5
+              WHEN name LIKE ? THEN 1
+              ELSE 0
+          END) +
+          (CASE 
+              WHEN abbr = ? THEN 10
+              WHEN abbr LIKE ? THEN 1
+              ELSE 0
+          END)
+      `);
+
+    parameters.push(keyword.trim(), keyword, keyword.trim(), keyword);
+  });
+
+  const query = `
+      SELECT id, name, abbr,
+          ${conditions.join(' + ')} AS score
+      FROM schools
+      group by id
+      HAVING score > 0
+      ORDER BY score DESC;
+  `;
+
+  console.log('Query:', query);
+
+  console.log('Params', parameters);
+
+  const results = await db
+    .prepare(query)
+    .bind(...parameters)
+    .all();
+  return results.results;
 }
 
 function generateWhereClause(columns, keywords) {
@@ -84,7 +131,7 @@ async function searchProfessors(db, keywords) {
 
   const whereClause = generateWhereClause(columns, keywords);
 
-  const query = `SELECT id, lname, fname FROM professors WHERE ${whereClause};`;
+  const query = `SELECT id, lname, fname FROM professors WHERE ${whereClause} order by lname, fname;`;
 
   const params = keywords.flatMap((keyword) => Array(columns.length).fill(`${keyword}%`));
 
@@ -107,4 +154,13 @@ export const getSearchResults = async (Astro, query: string) => {
   } catch (e) {
     console.error('failed on query', e);
   }
+};
+
+export const getAllSubjects = async (Astro, schoolId: number) => {
+  const DB = Astro.locals.runtime.env.DB;
+  const response = await DB.prepare('SELECT distinct Subject from Evaluations where schoolId = ? order by Subject asc')
+    .bind(schoolId)
+    .all();
+
+  return response.results;
 };
