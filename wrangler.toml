@@ -1,5 +1,7 @@
+name = "profeval"
+pages_build_output_dir = "./dist"
 
 [[d1_databases]]
-binding = "DB"                                       # i.e. available in your Worker on env.DB
+binding = "DB"
 database_name = "prod-profeval"
 database_id = "094ebd25-9b21-4110-986c-0c9cbd417b39"
