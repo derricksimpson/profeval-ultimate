@@ -47,8 +47,8 @@ const SearchComponent = ({ initialQuery = '' }) => {
           <div className="rounded-md">
             <input
               type="text"
-              id="q"
-              name="q"
+              id="for_id"
+              name="for"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 rounded-t-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-400 dark:focus:border-gray-400 focus:z-10 sm:text-sm bg-white dark:bg-gray-800"
@@ -60,7 +60,7 @@ const SearchComponent = ({ initialQuery = '' }) => {
             <input
               type="submit"
               value="Search"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-700 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-orange-800 dark:hover:bg-indigo-700"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white btn-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             />
           </div>
         </form>
@@ -92,7 +92,10 @@ const SearchComponent = ({ initialQuery = '' }) => {
                 <ul className="space-y-2">
                   {results.professorResults.map((professor) => (
                     <li key={professor.ID}>
-                      <a href={`/${professor.ID}`} className="text-blue-600 hover:underline">
+                      <a
+                        href={`/professors/school/school_id/${professor.FName}%20${professor.LName}/${professor.ID}`}
+                        className="text-blue-600 hover:underline"
+                      >
                         {professor.LName}, {professor.FName}
                       </a>
                     </li>
