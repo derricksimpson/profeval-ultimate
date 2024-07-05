@@ -1,5 +1,4 @@
 import type { Evaluation, EvaluationData } from '~/models/Evaluation';
-import { measure } from './metrics-service';
 
 export const getEvaluationsBySchool = async (id: number) => {};
 
@@ -51,7 +50,7 @@ async function searchSchools(db, searchText: string[]) {
     .bind(...parameters)
     .all();
 
-  await measure(db, { query, response });
+  //await measure(db, { query, response });
 
   return response.results;
 }
@@ -80,7 +79,7 @@ async function searchProfessors(db, keywords) {
     .bind(...params)
     .all();
 
-  await measure(db, { query, response });
+  //await measure(db, { query, response });
 
   return response?.results.map((result) => ({ ...result, result_type: 'professor' }));
 }

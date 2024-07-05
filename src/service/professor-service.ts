@@ -1,6 +1,4 @@
 import type { Evaluation } from '~/models/Evaluation';
-import { measure } from './metrics-service';
-import { string } from 'astro/zod';
 
 export const getProfessorsBySchoolAndLetter = async (Astro, id: number, letter: string) => {
   const DB = Astro.locals.runtime.env.DB;
@@ -18,7 +16,7 @@ export const getProfessorsBySchoolAndLetter = async (Astro, id: number, letter: 
 
   let response = await DB.prepare(query).bind(id, letter).all();
 
-  await measure(db, { query, response }, 'getProfessorsBySchoolAndLetter');
+  //await measure(db, { query, response }, 'getProfessorsBySchoolAndLetter');
 
   let evaluations = JSON.parse(response?.results[0]?.ProfessorJSON) as Array<Evaluation>;
 
@@ -27,7 +25,7 @@ export const getProfessorsBySchoolAndLetter = async (Astro, id: number, letter: 
 
 export const getEvaluationsForProfessor = async (Astro, professorId: number, limit: number = 10) => {
   const DB = Astro.locals.runtime.env.DB;
-  const db = DB;
+
   let query = `SELECT *
     FROM evaluations e
     WHERE e.professorId = ?
@@ -38,7 +36,7 @@ export const getEvaluationsForProfessor = async (Astro, professorId: number, lim
   let response = await DB.prepare(query).bind(professorId).all();
 
   let evaluations = response.results as Array<Evaluation>;
-  console.log(response.meta);
+
   return evaluations;
 };
 
