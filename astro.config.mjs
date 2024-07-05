@@ -18,6 +18,7 @@ const whenExternalScripts = (items = []) =>
 
 // https://astro.build/config
 export default defineConfig({
+  prefetch: false,
   output: 'server',
   adapter: cloudflare({
     platformProxy: {
