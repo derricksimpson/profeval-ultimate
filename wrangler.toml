@@ -2,7 +2,12 @@ compatibility_date = "2024-06-03"
 
 name = "profeval"
 pages_build_output_dir = "./dist"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "prod-profeval"
 database_id = "094ebd25-9b21-4110-986c-0c9cbd417b39"
+
+[[kv_namespaces]]
+binding = "profeval"
+id = "4e9e2a93546c476ea941cfebc0977b46"
