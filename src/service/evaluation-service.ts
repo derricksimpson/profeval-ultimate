@@ -100,10 +100,14 @@ export const getSearchResults = async (Astro, query: string) => {
 
 export const getAllSubjects = async (Astro, schoolId: number) => {
   const DB = Astro.locals.runtime.env.DB;
-  let query = 'SELECT distinct Subject from Evaluations where schoolId = ? order by Subject asc';
-
+  //let query = 'SELECT distinct Subject from Evaluations where schoolId = ? order by Subject asc';
+  let query = 'select * from aggregated_subjects where SchoolID = ?';
   const response = await DB.prepare(query).bind(schoolId).all();
 
   await measure(DB, { query, response });
-  return response.results;
+
+  if (response.results.length > 0) {
+    let subjects = response.results[0].Subjects.split(',');
+    return subjects.map((subject) => ({ Subject: subject }));
+  }
 };
