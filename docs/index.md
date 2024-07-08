@@ -17,9 +17,9 @@ npx wrangler d1 create prod-profeval
 
 npx wrangler d1 execute prod-profeval --local --file=./data/profeval.sql
 
-npx wrangler d1 execute prod-profeval --local --file=./data/indexes.sql
-
-npx wrangler d1 execute prod-profeval --local --file=./data/aggregations.sql
+## Not needed any longer locally
+#npx wrangler d1 execute prod-profeval --local --file=./data/indexes.sql
+#npx wrangler d1 execute prod-profeval --local --file=./data/aggregations.sql
 
 
 ```
