@@ -93,10 +93,10 @@ const SearchComponent = ({ initialQuery = '' }) => {
                   {results.professorResults.map((professor) => (
                     <li key={professor.ID}>
                       <a
-                        href={`/professors/school/school_id/${professor.FName}%20${professor.LName}/${professor.ID}`}
+                        href={`/professors/school/${professor.schoolId}/${professor.fName}%20${professor.lName}/${professor.id}`}
                         className="text-blue-600 hover:underline"
                       >
-                        {professor.LName}, {professor.FName}
+                        {professor.lName}, {professor.fName}
                       </a>
                     </li>
                   ))}
