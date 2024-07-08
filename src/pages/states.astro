@@ -11,18 +11,18 @@ import { states } from '~/data/states.ts';
 ---
 
 <Layout metadata={metadata}>
-  <div class="container mx-auto px-4 py-8">
-    <h3 class="text-3xl font-bold text-center mb-8">Choose Your State</h3>
+  <div class="container p-8">
+    <h3 class="text-2xl font-bold mb-8">Choose Your State</h3>
 
     <div class="grid gap-2">
       {
         states.map((state) => (
           <a
             href={`/state/colleges-in-${state.name.toLowerCase().replace(' ', '-')}/${state.id}`}
-            class="text-xl rounded-md shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 flex items-center justify-center p-2 text-center"
+            class="text-xl rounded-md shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 flex items-center p-2 text-center"
           >
             <div>
-              <p class="text-sm">{state.name}</p>
+              <p>{state.name}</p>
             </div>
           </a>
         ))
