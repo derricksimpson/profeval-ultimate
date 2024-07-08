@@ -1,4 +1,5 @@
 import type { Evaluation, EvaluationData } from '~/models/Evaluation';
+import { measureQuery } from './metrics-service';
 
 export const getEvaluationsBySchool = async (id: number) => {};
 
@@ -41,16 +42,15 @@ async function searchSchools(db, searchText: string[]) {
       ORDER BY score DESC;
   `;
 
-  console.log('Query:', query);
-
-  console.log('Params', parameters);
+  // console.log('Query:', query);
+  // console.log('Params', parameters);
 
   const response = await db
     .prepare(query)
     .bind(...parameters)
     .all();
 
-  //await measure(db, { query, response });
+  await measureQuery(db, { query, response });
 
   return response.results;
 }
@@ -70,7 +70,7 @@ async function searchProfessors(db, keywords) {
 
   const whereClause = generateWhereClause(columns, keywords);
 
-  const query = `SELECT id, lname, fname FROM professors WHERE ${whereClause} order by lname, fname;`;
+  const query = `SELECT id, schoolId, lname, fname FROM professors WHERE ${whereClause} order by lname, fname;`;
 
   const params = keywords.flatMap((keyword) => Array(columns.length).fill(`${keyword}%`));
 
@@ -79,7 +79,7 @@ async function searchProfessors(db, keywords) {
     .bind(...params)
     .all();
 
-  //await measure(db, { query, response });
+  await measureQuery(db, { query, response });
 
   return response?.results.map((result) => ({ ...result, result_type: 'professor' }));
 }
@@ -97,14 +97,81 @@ export const getSearchResults = async (Astro, query: string) => {
   }
 };
 
+export const getEmptyEvaluations = async (Astro) => {
+  try {
+    let sql = 'SELECT * FROM Evaluations where professorId is null';
+    const DB = Astro.locals.runtime.env.DB;
+    let response = await DB.prepare(sql)
+
+      .all();
+
+    return response.results;
+  } catch (e) {
+    console.error('failed on query', e);
+  }
+};
+
+export const setProfessorIdOnEvalution = async (Astro, professorId, evaluationId) => {
+  try {
+    const DB = Astro.locals.runtime.env.DB;
+    let response = await DB.prepare('UPDATE Evaluations set professorId = ? where ID = ?')
+      .bind(professorId, evaluationId)
+      .run();
+    console.log('Mapped eval to Prof', response);
+    return response.results;
+  } catch (e) {
+    console.error('failed on query', e);
+  }
+};
+
+export const getEvaluationSearchResults = async (Astro, params) => {
+  let { schoolId, subject, callNumber, lastName } = params;
+
+  try {
+    if (!schoolId) {
+      return [];
+    }
+    const DB = Astro.locals.runtime.env.DB;
+
+    let params = [];
+    let sql = 'SELECT * FROM Evaluations where schoolId = ? ';
+    params.push(schoolId);
+
+    if (subject) {
+      sql += 'and Subject = ? ';
+      params.push(subject);
+    }
+
+    if (callNumber) {
+      sql += 'and CallNumber = ? ';
+      params.push(callNumber);
+    }
+
+    if (lastName) {
+      sql += 'and LName = ? ';
+      params.push(lastName);
+    }
+
+    sql += 'order by LName, FName limit 10 offset 60';
+
+    let response = await DB.prepare(sql)
+      .bind(...params)
+      .all();
+
+    return response.results;
+  } catch (e) {
+    console.error('failed on query', e);
+  }
+};
+
 export const getAllSubjects = async (Astro, schoolId: number) => {
   const DB = Astro.locals.runtime.env.DB;
 
   const KV = Astro.locals.runtime.env.profeval;
 
   let value = await KV.get(`subjects_${schoolId}`);
+
   if (value) {
-    console.log('FOUND in kv!');
     return value.split(',').map((subject) => ({ Subject: subject }));
   }
 
@@ -118,3 +185,63 @@ export const getAllSubjects = async (Astro, schoolId: number) => {
     return subjects.map((subject) => ({ Subject: subject }));
   }
 };
+
+export const saveEvaluation = async (Astro, professor, evaluation: EvaluationData) => {
+  // don't forget to increment the evaluation count!  (or, simply use the below)
+  // Re-aggregate subjects for this profssorLetter and character
+};
+
+// Aggregations for professor table
+/*
+
+-- new evaluation count
+WITH eval_counts AS (
+    SELECT 
+        professorId, 
+        count(professorId) as evalCount
+    FROM evaluations 
+    GROUP BY professorId
+)
+UPDATE professors
+SET evaluationCount = (
+    SELECT evalCount
+    FROM eval_counts
+    WHERE eval_counts.professorId = professors.id
+)
+WHERE professors.id IN (
+    SELECT professorId
+    FROM eval_counts
+);
+
+
+
+
+
+Aggregate and set overall rating
+WITH evals AS (
+    SELECT 
+        professorId, 
+        CAST(json_extract(EvaluationData, '$.o') AS INTEGER) AS overall 
+    FROM evaluations 
+    WHERE CAST(json_extract(EvaluationData, '$.o') AS INTEGER) > 0
+),
+avg_overall AS (
+    SELECT 
+        professorId, 
+        round((sum(overall) * 1.0 / count(overall)),2) as avg_overall
+    FROM evals 
+    GROUP BY professorId
+)
+UPDATE professors
+SET overall = (
+    SELECT avg_overall
+    FROM avg_overall
+    WHERE avg_overall.professorId = professors.id
+)
+WHERE professors.id IN (
+    SELECT professorId
+    FROM avg_overall
+);
+
+
+*/

@@ -1,24 +1,24 @@
 import type { Evaluation } from '~/models/Evaluation';
+import { measureQuery } from './metrics-service';
 
 export const getProfessorsBySchoolAndLetter = async (Astro, id: number, letter: string) => {
   const DB = Astro.locals.runtime.env.DB;
   const db = DB;
+  console.log({ id, letter });
+  let query = `SELECT id as professorId, LName as lName, FName as fName, subjects , evaluationCount
+    FROM professors p
+    WHERE p.SchoolId = ? AND LNameChar = UPPER(?)
+    ORDER BY p.LName, p.FName
+  `;
 
-  // let query = `SELECT DISTINCT p.id as professorId, p.LName, p.FName, GROUP_CONCAT(DISTINCT e.Subject) AS Subjects, COUNT(e.id) AS EvaluationCount
-  // FROM professors p
-  // JOIN evaluations e ON p.id = e.professorId
-  // WHERE e.SchoolId = ? AND LNameChar = UPPER(?)
-  // GROUP BY p.id, p.LName, p.FName
-  // ORDER BY p.LName, p.FName
-  // `;
-
-  let query = `select * from aggregated_school_professors where SchoolId = ? and LNameChar = ?;`;
+  console.log('Query:', query);
+  //let query = `select * from aggregated_school_professors where SchoolId = ? and LNameChar = ?;`;
 
   let response = await DB.prepare(query).bind(id, letter).all();
 
-  //await measure(db, { query, response }, 'getProfessorsBySchoolAndLetter');
+  await measureQuery(db, { query, response }, 'getProfessorsBySchoolAndLetter');
 
-  let evaluations = JSON.parse(response?.results[0]?.ProfessorJSON) as Array<Evaluation>;
+  let evaluations = response?.results as Array<Evaluation>;
 
   return evaluations;
 };
@@ -34,6 +34,7 @@ export const getEvaluationsForProfessor = async (Astro, professorId: number, lim
   `;
 
   let response = await DB.prepare(query).bind(professorId).all();
+  await measureQuery(DB, { query, response }, 'getProfessorsBySchoolAndLetter');
 
   let evaluations = response.results as Array<Evaluation>;
 
@@ -65,4 +66,16 @@ export const createAggregation = async (Astro, schoolId, lNameChar: string) => {
   // update table
 
   // bind params!
+};
+
+export const createProfessor = async (Astro, lName: string, fName: string, schoolId: number) => {
+  const DB = Astro.locals.runtime.env.DB;
+
+  let query = `INSERT INTO professors (LName, FName, LNameChar, SchoolId) VALUES (?, ?, ?, ?)`;
+
+  let response = await DB.prepare(query).bind(lName, fName, lName.substring(0, 1).toUpperCase(), schoolId).run();
+
+  await measureQuery(DB, { query, response }, 'createProfessor');
+
+  return response.lastInsertRowid;
 };

@@ -13,16 +13,16 @@ let schools = response.results as Array<School>;
 ---
 
 <PageLayout metadata={{ title: 'Colleges, Universities, and Technical or Community Colleges in' + state.name }}>
-  <div class="container mx-auto mb-12">
-    <h1 class="text-2xl mt-2 mb-4 inline-block">Schools in {state.name}</h1>
+  <div class="container p-8 mx-auto mb-12">
+    <h1 class="text-3xl mt-2 mb-4 inline-block font-bold">{state.name} / Select your School</h1>
 
     {
-      schools.map((school) => (
+      schools.map((school, index) => (
         <a
           href={`/school/${school.Name.replace(/'\\ '/, '-')}/${school.ID}`}
-          class="block border border-gray-200 p-2 mt-2"
+          class={`block border ${index % 2 == 0 && 'bg-slate-100'}  border-gray-200 p-2`}
         >
-          <h2 class=" ">
+          <h2 class="font-semibold text-lg">
             {school.Name} ({school.abbr})
           </h2>
         </a>
