@@ -16,10 +16,10 @@ import { states } from '~/data/states.ts';
 
     <div class="grid gap-2">
       {
-        states.map((state) => (
+        states.map((state, index) => (
           <a
             href={`/state/colleges-in-${state.name.toLowerCase().replace(' ', '-')}/${state.id}`}
-            class="text-xl rounded-md shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 flex items-center p-2 text-center"
+            class={`text-xl rounded-md  ${index % 2 == 0 && 'bg-gray-50'} shadow-sm overflow-hidden hover:shadow-md transition-shadow flex items-center p-2 text-center`}
           >
             <div>
               <p>{state.name}</p>
