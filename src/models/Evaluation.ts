@@ -22,7 +22,7 @@ export interface Evaluation {
   SchoolID: number;
   Hidden: number;
   IP: string;
-  PostDate: string;
+  PostDate: Date;
   FName: string;
   LName: string;
   Subject: string;
