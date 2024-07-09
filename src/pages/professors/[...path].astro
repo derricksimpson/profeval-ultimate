@@ -1,26 +1,33 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import LettersComponent from '~/components/core/LettersComponent';
-import TableComponent from '~/components/core/TableComponent';
-import EvaluationResultComponent from '~/components/core/EvaluationResultComponent';
-import { getEvaluationsForProfessor } from '~/service/professor-service';
+
+import { getEvaluationsForProfessor, getProfessorById } from '~/service/professor-service';
+import { getSchoolById } from '~/service/school-service';
+
 import ProfessorCardComponent from '~/components/core/ProfessorCardComponent';
 import EvaluationSummaryComponent from '~/components/core/EvaluationSummaryComponent';
 
 const { path } = Astro.params;
-const [school_name, schoolId, professor_name, professorId] = path.split('/');
+const [_, schoolId, professor_name, professorId] = path.split('/');
 
 const metadata = {
   title: professor_name + ' - Rate My Professor Here',
   description: 'Rate your professors at and help other students stay informed informed.',
 };
 
-let professors = [];
+// let school = await getSchoolById(Astro, Number(schoolId));
 
-let evaluations = await getEvaluationsForProfessor(Astro, Number(professorId), 1000000);
+// let evaluations = await getEvaluationsForProfessor(Astro, Number(professorId), 1000000);
 
-let eval1 = evaluations[0];
+let [school, evaluations, professor] = await Promise.all([
+  getSchoolById(Astro, Number(schoolId)),
+  getEvaluationsForProfessor(Astro, Number(professorId), 1000000),
+  getProfessorById(Astro, Number(professorId)),
+]);
 
+if (!professor || !school || !evaluations) {
+  return new Response('Not Found');
+}
 // if (letter) {
 //   professors = await getProfessorsEvaluations(Astro, Number(professorId), letter);
 // }
@@ -31,12 +38,13 @@ let eval1 = evaluations[0];
 <Layout metadata={metadata}>
   <div class="container mx-auto mt-5">
     <h1 class="text-xl font-bold mt-5">
-      {school_name} / <a class="underline" href={`/school/${school_name}/${schoolId}/E`}>E</a> / <span
-        class="font-normal">{eval1?.FName} {eval1?.LName}</span
-      >
+      <a class="underline" href={`/school/${school.toUrlFriendlyName()}/${schoolId}/`}>{school.Name}</a> /
+      <a class="underline" href={`/school/${school.toUrlFriendlyName()}/${schoolId}/${professor.lNameChar}`}
+        >{professor.lNameChar}</a
+      > / <span class="font-normal">{professor?.fName} {professor?.lName}</span>
     </h1>
     <div class="mt-5 border border-gray-100 rounded-lg shadow-md">
-      <ProfessorCardComponent evaluations={evaluations} />
+      <ProfessorCardComponent professor={professor} evaluations={evaluations} />
 
       <EvaluationSummaryComponent evaluations={evaluations} />
     </div>
