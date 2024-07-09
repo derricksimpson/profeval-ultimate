@@ -8,12 +8,12 @@ interface Prof {
 
 // declare PropTypes
 interface TableComponentProps {
-  schoolName: string;
+  schoolURL: string;
   schoolId: number;
   professors: Prof[];
 }
 
-export default ({ schoolName, schoolId, professors }: TableComponentProps) => {
+export default ({ schoolURL: schoolName, schoolId, professors }: TableComponentProps) => {
   return (
     <div className="mt-12 mx-auto px-4 md:px-8">
       <div className="items-start justify-between md:flex">
