@@ -1,5 +1,19 @@
 import type { Evaluation } from '~/models/Evaluation';
 import { measureQuery } from './metrics-service';
+import { Professor } from '~/models/Professor';
+
+export async function getProfessorById(Astro, id: number) {
+  const DB = Astro.locals.runtime.env.DB;
+
+  let query = `SELECT * from professors where id = ?`;
+
+  let response = await DB.prepare(query).bind(id).all();
+  console.log(response.results);
+  if (response.results.length > 0) {
+    return Professor.fromRaw(response.results[0]);
+  }
+  return null;
+}
 
 export const getProfessorsBySchoolAndLetter = async (Astro, id: number, letter: string) => {
   const DB = Astro.locals.runtime.env.DB;
