@@ -25,7 +25,6 @@ export interface EvaluationForm {
     courseDifficulty: string;
   };
   comments: string;
-  spamProtection: string;
 }
 
 export const initialEvaluationForm: EvaluationForm = {
@@ -54,5 +53,4 @@ export const initialEvaluationForm: EvaluationForm = {
     courseDifficulty: '0',
   },
   comments: '',
-  spamProtection: '',
 };

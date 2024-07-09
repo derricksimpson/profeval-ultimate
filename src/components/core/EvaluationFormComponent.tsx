@@ -1,21 +1,14 @@
 // components/EvaluationForm.tsx
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { type EvaluationForm, initialEvaluationForm } from '~/models/EvaluationForm';
 import StepsComponent from '../StepsComponent';
+import RadioButton from '../RadioButton';
 
 interface SectionHeaderProps {
   sectionLabel: string;
   subHeading?: string;
 }
 
-const SectionHeader = ({ sectionLabel, subHeading }: SectionHeaderProps) => {
-  return (
-    <div className="items-start justify-between py-4 border-b mb-3">
-      <h3 className="text-xl font-semibold mb">{sectionLabel}</h3>
-      {subHeading && <p className="text-gray-600 mt-2">subHeading</p>}
-    </div>
-  );
-};
 // Define a type for the step
 type Step = 1 | 2 | 3 | 4;
 
@@ -42,23 +35,58 @@ const EvaluationFormComponent = () => {
           },
         };
       }
+      let newState = { ...prevState, [name]: value };
+
+      return newState;
+    });
+  };
+
+  const onSimpleChange = (name: string, value: string) => {
+    setFormData((prevState) => {
       return { ...prevState, [name]: value };
     });
   };
 
-  const TextInput = ({ name, value, onChange, type = 'text' }) => {
+  interface TextInputProps {
+    name: string;
+    value: string;
+    onChange: Function;
+    type?: string;
+  }
+
+  const TextInput: React.FC<TextInputProps> = React.memo(({ name, value, onChange, type = 'text' }) => {
+    const [localValue, setLocalValue] = useState(value);
+
+    const handleBlur = () => {
+      if (localValue !== value) {
+        onChange(name, localValue);
+      }
+    };
+
     return (
       <input
         type={type}
         name={name}
-        value={value}
-        onChange={onChange}
+        value={localValue}
+        onChange={(e) => setLocalValue(e.target.value)}
+        onBlur={handleBlur}
         className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
       />
     );
-  };
+  });
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {};
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
+    const { checked } = e.target;
+    setFormData((prevState) => {
+      return {
+        ...prevState,
+        exams: {
+          ...prevState.exams,
+          [key]: checked,
+        },
+      };
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,26 +120,26 @@ const EvaluationFormComponent = () => {
 
       <StepsComponent
         step={step}
-        stepItems={['General Information', 'Exam Information', 'Instructor Information', 'Comments']}
+        setStep={nextStep}
+        stepItems={['General Information', 'Exam Information', 'Course Information', 'Comments']}
       />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {step == 1 && (
           <>
             {/* General Information Section */}
-            <div className="col-span-3">
-              <SectionHeader sectionLabel="General Information" />
-            </div>
+            <div className="col-span-3 border-b p-2"></div>
 
             {/* Professor's Name */}
             <div className="col-span-3 lg:col-span-1">
               <label className="block mb-2">
-                Professor's <b>Last Name</b>:
+                Professor's <b>Last</b> Name:
               </label>
-              <TextInput name="lastName" value={formData.lastName} onChange={handleChange} />
+              <TextInput name="lastName" value={formData.lastName} onChange={onSimpleChange} />
             </div>
             <div className="col-span-3 lg:col-span-1">
               <label className="block mb-2">Professor's First Name:</label>
-              <TextInput name="firstName" value={formData.firstName} onChange={handleChange} />
+              <TextInput name="firstName" value={formData.firstName} onChange={onSimpleChange} />
             </div>
             <div className="col-span-3 lg:col-span-1"></div>
 
@@ -187,11 +215,8 @@ const EvaluationFormComponent = () => {
         {/* Exam Information Section */}
         {step == 2 && (
           <>
-            <div className="col-span-2">
-              <SectionHeader sectionLabel="Exam Information" />
-            </div>
-
-            {Object.keys(formData.exams).map((key) => (
+            <div className="col-span-3 border-b p-2"></div>
+            {/* {Object.keys(formData.exams).map((key) => (
               <div key={key}>
                 <input
                   type="checkbox"
@@ -209,6 +234,14 @@ const EvaluationFormComponent = () => {
                   {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}:
                 </label>
               </div>
+            ))} */}
+            {Object.keys(formData.exams).map((key) => (
+              <div key={key}>
+                <RadioButton
+                  label={key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
+                  options={['Yes', 'No']}
+                />{' '}
+              </div>
             ))}
           </>
         )}
@@ -217,10 +250,8 @@ const EvaluationFormComponent = () => {
           <>
             {/* Instructor Information Section */}
             {/* Other Information Section */}
-            <div className="col-span-1 md:col-span-2 mt-6">
-              <h3 className="text-xl font-semibold mb-2">Other Information</h3>
-              <hr className="border-orange-600 dark:border-orange-400 mb-4" />
-            </div>
+            <div className="col-span-3 border-b p-2"></div>
+
             {Object.keys(formData.otherInfo).map((key) => (
               <div key={key}>
                 <label className="block mb-2">
@@ -246,9 +277,8 @@ const EvaluationFormComponent = () => {
         {step == 4 && (
           <>
             {/* Additional Information Section */}
-            <div className="col-span-1 md:col-span-3 mt-6">
-              <SectionHeader sectionLabel="Comments" />
-            </div>
+            <div className="col-span-3 border-b p-2"></div>
+
             <div className="col-span-1 md:col-span-3">
               <label className="block mb-2">
                 Please provide any additional details about this course that you feel may be important to other
@@ -273,22 +303,26 @@ const EvaluationFormComponent = () => {
           }}
           className="px-6 py-2 bg-gray-600 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
         />
-
-        <input
-          type="button"
-          value="Next"
-          onClick={() => {
-            nextStep((step + 1) as Step);
-          }}
-          className="px-6 ml-2 py-2 bg-orange-600 text-white font-semibold rounded-md shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
-        />
-
-        {/* <button
-          type="submit"
-          className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-md shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
-        >
-          Post
-        </button> */}
+        {step < 4 && (
+          <>
+            <input
+              type="button"
+              value="Next"
+              onClick={() => {
+                nextStep((step + 1) as Step);
+              }}
+              className="px-6 ml-2 py-2 bg-orange-600 text-white font-semibold rounded-md shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
+            />
+          </>
+        )}
+        {step == 4 && (
+          <button
+            type="submit"
+            className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-md shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
+          >
+            Post
+          </button>
+        )}
       </div>
     </form>
   );
