@@ -35,10 +35,10 @@ export default () => {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
               <span
-                className={`inline-flex w-full h-full rounded-full peer-checked:ring ring-offset-2 cursor-pointer duration-150 bg-${item.bg} ring-${item.bg} text-white`}
+                className={`inline-flex w-full h-full rounded-full peer-checked:ring ring-offset-2 cursor-pointer duration-150 bg-${item.bg} ring-${item.bg}`}
               >
-                <div className={`flex w-full h-full rounded-full text-center items-center justify-center`}>
-                  Option {idx}
+                <div className={`text-white flex w-full h-full rounded-full text-center items-center justify-center`}>
+                  &nbsp;&nbsp;Option {idx}
                 </div>
               </span>
             </label>
