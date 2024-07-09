@@ -1,54 +1,71 @@
-import React from 'react';
-
-export type StepComponentProps = {
-  step: 1 | 2 | 3 | 4;
-  stepItems: string[];
+type RadioButtonProps = {
+  label: string;
 };
 
-export default ({ step, stepItems }: StepComponentProps) => {
+export default ({ label, options }) => {
+  if (!options) {
+    options = ['Option 1', 'Option 2'];
+  }
+
+  const colors = [
+    { bg: 'bg-pe-blue', ring: 'ring-pe-blue' },
+    { bg: 'bg-[#777777]', ring: 'ring-[#777777]' },
+    // { bg: 'bg-[#DB2777]', ring: 'ring-[#DB2777]' },
+    // { bg: 'bg-[#475569]', ring: 'ring-[#475569]' },
+    // { bg: 'bg-[#EA580C]', ring: 'ring-[#EA580C]' },
+  ];
+
+  const instId = `rg_${Math.random() * 1000000}`;
   return (
-    <div className="mx-auto px-4 md:px-0">
-      <ul
-        aria-label="Steps"
-        className="flex flex-col md:flex-row items-start md:items-center text-gray-600 font-medium"
-      >
-        {stepItems.map((item, idx) => (
-          <li
-            key={idx}
-            aria-current={step == idx + 1 ? 'step' : false}
-            className="flex-1 w-auto md:w-auto gap-x-2  md:mb-0"
-          >
-            <div className="flex items-center w-full">
-              <div
-                className={`w-8 h-8 rounded-full border-2 flex-none flex items-center justify-center ${
-                  step > idx + 1 ? 'bg-pe-blue border-pe-blue' : step == idx + 1 ? 'border-pe-blue' : ''
-                }`}
+    <div className=" mx-auto px-4">
+      <h2 className="text-gray-800 font-medium">{label}</h2>
+      <ul className="mt-4 flex items-center flex-wrap gap-4">
+        {colors.map((item, idx) => (
+          /* Color box */
+          <li key={idx} className="flex-none">
+            <label htmlFor={`${instId}_${idx}`} className="block relative w-32 h-8" style={{ userSelect: 'none' }}>
+              <input
+                id={`${instId}_${idx}`}
+                type="radio"
+                // defaultChecked={idx == 1 ? true : false}
+                name={`${instId}_group`}
+                className="sr-only peer"
+              />
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2.5"
+                stroke="currentColor"
+                style={{ top: '.4em', left: '.6em' }}
+                className="w-5 h-5 text-white absolute inset-0  z-0 pointer-events-none hidden peer-checked:block duration-150"
               >
-                <span className={step > idx + 1 ? 'hidden' : step == idx + 1 ? 'text-pe-blue border-b-pe-blue' : ''}>
-                  {idx + 1}
-                </span>
-                {step > idx + 1 && (
-                  <svg
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5 text-white"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                )}
-              </div>
-              <div className="flex-grow">
-                <h3 className={`text-sm ${step == idx + 1 ? 'text-pe-blue' : ''}`}>{item}</h3>
-              </div>
-            </div>
-            {idx < stepItems.length - 1 && (
-              <hr className={`hidden md:block w-full md:w-8 border ${step > idx + 1 ? 'border-pe-blue' : ''}`} />
-            )}
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              <span
+                className={`inline-flex  w-full h-full rounded-full peer-checked:ring ring-offset-2 cursor-pointer duration-150 ${item.bg} ${item.ring}`}
+              >
+                <div className={`text-white flex w-full h-full rounded-full text-center items-center justify-center`}>
+                  &nbsp;&nbsp;{options[idx]}
+                </div>
+              </span>
+            </label>
           </li>
         ))}
       </ul>
     </div>
   );
 };
+
+/*
+
+original colors
+    { bg: 'bg-[#2563EB]', ring: 'ring-[#2563EB]' },
+    { bg: 'bg-[#8B5CF6]', ring: 'ring-[#8B5CF6]' },
+    { bg: 'bg-[#DB2777]', ring: 'ring-[#DB2777]' },
+    { bg: 'bg-[#475569]', ring: 'ring-[#475569]' },
+    { bg: 'bg-[#EA580C]', ring: 'ring-[#EA580C]' },
+
+
+    */
