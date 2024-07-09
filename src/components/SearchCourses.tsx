@@ -37,11 +37,11 @@ const SearchCourses: React.FC<SearchCoursesProps> = ({ schoolId, courseSubjects,
               type="text"
               name="courseNumber"
               placeholder="(optional) Course Number"
-              className="p-2 border border-gray-200"
+              className="p-2  ml-2 border border-gray-200"
               value={courseNumber}
               onChange={(e) => setCourseNumber(e.target.value)}
             />
-            <button className="btn-primary p-2 border border-gray-200" onClick={handleSearch}>
+            <button className="btn-primary p-2 ml-2 border border-gray-200" onClick={handleSearch}>
               Search
             </button>
             <input
