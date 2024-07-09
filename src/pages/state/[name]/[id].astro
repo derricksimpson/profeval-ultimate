@@ -20,7 +20,7 @@ let schools = response.results as Array<School>;
       schools.map((school, index) => (
         <a
           href={`/school/${school.Name.replace(/'\\ '/, '-')}/${school.ID}`}
-          class={`block border ${index % 2 == 0 && 'bg-slate-100'}  border-gray-200 p-2`}
+          class={`block border ${index % 2 == 0 && 'bg-gray-100'}  border-gray-200 p-2`}
         >
           <h2 class="font-semibold text-lg">
             {school.Name} ({school.abbr})
