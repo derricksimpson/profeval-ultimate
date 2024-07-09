@@ -2,10 +2,7 @@ import React from 'react';
 
 import { type Evaluation, type EvaluationData } from '~/models/Evaluation';
 import UltimateDialComponent from './UltimateDialComponent';
-
-interface ProfessorCardProps {
-  evaluations: Evaluation[];
-}
+import type { Professor } from '~/models/Professor';
 
 /*
 const gradeOptions = ['Not Specified', 'A', 'B', 'C', 'D', 'F', 'Withdrew'];
@@ -148,10 +145,16 @@ const getAverageScale = (evaluations: Evaluation[], field: keyof EvaluationData)
       };
   }
 };
-const ProfessorCardComponent: React.FC<ProfessorCardProps> = ({ evaluations }) => {
+
+interface ProfessorCardProps {
+  evaluations: Evaluation[];
+  professor: Professor;
+}
+
+const ProfessorCardComponent: React.FC<ProfessorCardProps> = ({ professor, evaluations }) => {
   if (evaluations.length === 0) return null;
 
-  const { FName, LName, Subject, CourseTitle } = evaluations[0];
+  //const { FName, LName, Subject, CourseTitle } = evaluations[0];
 
   const averageGrade = getAverageScale(evaluations, 'g');
   const averageOverall = getAverageScale(evaluations, 'o');
@@ -163,14 +166,14 @@ const ProfessorCardComponent: React.FC<ProfessorCardProps> = ({ evaluations }) =
       <div className="flex flex-col md:flex-row mb-4">
         <div className="md:w-1/4 p-4 flex flex-col items-center">
           <img
-            src={`https://ui-avatars.com/api/?name=${FName}+${LName}&background=0D8ABC&color=fff&size=256`}
-            alt={`${FName} ${LName}`}
+            src={`https://ui-avatars.com/api/?name=${professor.fName}+${professor.lName}&background=0D8ABC&color=fff&size=256`}
+            alt={`${professor.fName} ${professor.lName}`}
             className="rounded-full w-24 h-24 mb-4"
           />
           <p className="text-center text-lg font-semibold">
-            {FName} {LName}
+            {professor.fName} {professor.lName}
           </p>
-          <p className="text-center text-sm text-gray-500">{Subject}</p>
+          <p className="text-center text-sm text-gray-500">{professor.subjects}</p>
         </div>
         <div className="md:w-3/4 p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
