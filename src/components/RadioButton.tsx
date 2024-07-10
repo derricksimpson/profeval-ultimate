@@ -8,6 +8,9 @@ type RadioButtonProps = {
 };
 
 export default ({ name, label, colors, options, width, onChange }: RadioButtonProps) => {
+  if (!name) {
+    name = 'radioGroup' + Math.random() * 1000000;
+  }
   if (!options) {
     options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7'];
   }
@@ -20,6 +23,9 @@ export default ({ name, label, colors, options, width, onChange }: RadioButtonPr
     width = 32;
   }
 
+  if (!onChange) {
+    onChange = (name, value) => {};
+  }
   const colorMap = colors.map((c) => {
     return {
       base: c,
