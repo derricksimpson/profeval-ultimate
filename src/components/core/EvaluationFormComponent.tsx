@@ -42,6 +42,21 @@ const EvaluationFormComponent = () => {
   };
 
   const onSimpleChange = (name: string, value: string) => {
+    if (name.includes('.')) {
+      const [section, field] = name.split('.') as [keyof EvaluationForm, keyof EvaluationForm[keyof EvaluationForm]];
+      setFormData((prevState) => {
+        let newState = {
+          ...prevState,
+          [section]: {
+            ...(prevState[section] as any),
+            [field]: value,
+          },
+        };
+        console.log(newState);
+        return newState;
+      });
+      return;
+    }
     setFormData((prevState) => {
       return { ...prevState, [name]: value };
     });
@@ -124,175 +139,129 @@ const EvaluationFormComponent = () => {
         stepItems={['General Information', 'Exam Information', 'Course Information', 'Comments']}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {step == 1 && (
-          <>
-            {/* General Information Section */}
-            <div className="col-span-3 border-b p-2"></div>
+      <div className={`${step == 1 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
+        {/* General Information Section */}
+        <div className="col-span-3 border-b p-2"></div>
 
-            {/* Professor's Name */}
-            <div className="col-span-3 lg:col-span-1">
-              <label className="block mb-2">
-                Professor's <b>Last</b> Name:
-              </label>
-              <TextInput name="lastName" value={formData.lastName} onChange={onSimpleChange} />
-            </div>
-            <div className="col-span-3 lg:col-span-1">
-              <label className="block mb-2">Professor's First Name:</label>
-              <TextInput name="firstName" value={formData.firstName} onChange={onSimpleChange} />
-            </div>
-            <div className="col-span-3 lg:col-span-1"></div>
+        {/* Professor's Name */}
+        <div className="col-span-3 md:col-span-1">
+          <label className="block mb-2">
+            Professor's <b>Last</b> Name:
+          </label>
+          <TextInput name="lastName" value={formData.lastName} onChange={onSimpleChange} />
+        </div>
+        <div className="col-span-3 md:col-span-1">
+          <label className="block mb-2">Professor's First Name:</label>
+          <TextInput name="firstName" value={formData.firstName} onChange={onSimpleChange} />
+        </div>
+        <div className="col-span-3 md:col-span-1"></div>
 
-            {/* Subject, Course Number, Course Title */}
+        {/* Subject, Course Number, Course Title */}
 
-            <div className="lg:col-span-1 pt-2">
-              <label className="block mb-2">Subject Area:</label>
-              <select
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
-              >
-                <option value="">Choose One</option>
-                {/* Add options dynamically */}
-              </select>
-            </div>
-            <div className="col-span-3 lg:col-span-1 pt-2">
-              <label className="block mb-2">Course Number:</label>
-              <input
-                type="text"
-                name="courseNumber"
-                value={formData.courseNumber}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
-              />{' '}
-            </div>
-            <div className="col-span-3 lg:col-span-1 pt-2">
-              <label className="block mb-2">Course Title:</label>
-              <input
-                type="text"
-                name="courseTitle"
-                value={formData.courseTitle}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
+        <div className="lg:col-span-1 pt-2">
+          <label className="block mb-2">Subject Area:</label>
+          <select
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
+          >
+            <option value="">Choose One</option>
+            {/* Add options dynamically */}
+          </select>
+        </div>
+        <div className="col-span-3 md:col-span-1 pt-2">
+          <label className="block mb-2">Course Number:</label>
+          <input
+            type="text"
+            name="courseNumber"
+            value={formData.courseNumber}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
+          />{' '}
+        </div>
+        <div className="col-span-3 md:col-span-1 pt-2">
+          <label className="block mb-2">Course Title:</label>
+          <input
+            type="text"
+            name="courseTitle"
+            value={formData.courseTitle}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+      </div>
 
-            {/* Grade and Overall Rating */}
-            <div className="lg:col-span-1">
-              <label className="block mb-2">Grade You Received:</label>
-              <select
-                name="grade"
-                value={formData.grade}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
-              >
-                <option value="0">Not Specified</option>
-                <option value="1">A</option>
-                <option value="2">B</option>
-                <option value="3">C</option>
-                <option value="4">D</option>
-                <option value="5">F</option>
-                <option value="6">Withdrew</option>
-              </select>
-            </div>
-            <div className="col-span-3 lg:col-span-1">
-              <label className="block mb-2">Overall Rating:</label>
-              <select
-                name="overall"
-                value={formData.overallRating}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
-              >
-                <option value="1">Poor</option>
-                <option value="2">OK</option>
-                <option value="3">Good</option>
-              </select>
-            </div>
-          </>
-        )}
+      <div className={`${step == 2 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
+        <div className="col-span-3 border-b p-2"></div>
 
-        {/* Exam Information Section */}
-        {step == 2 && (
-          <>
-            <div className="col-span-3 border-b p-2"></div>
-            {/* {Object.keys(formData.exams).map((key) => (
-              <div key={key}>
-                <input
-                  type="checkbox"
-                  id={`checkbox-${key}`}
-                  name={`checkbox-${key}`}
-                  className="checkbox-item peer hidden"
-                  checked={formData.exams[key]}
-                  onChange={(e) => handleCheckboxChange(e, key)}
-                />
-                <label
-                  htmlFor={`checkbox-${key}`}
-                  className="relative flex w-5 h-5 bg-white peer-checked:bg-blue-600 rounded-md border ring-offset-2 ring-indigo-600 duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
-                ></label>
-                <label className="block mb-2">
-                  {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}:
-                </label>
-              </div>
-            ))} */}
-            {Object.keys(formData.exams).map((key) => (
-              <div key={key}>
-                <RadioButton
-                  label={key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
-                  options={['Yes', 'No']}
-                />{' '}
-              </div>
-            ))}
-          </>
-        )}
+        {Object.keys(formData.exams).map((key) => (
+          <div className="col-span-3 md:col-span-1" key={key}>
+            <RadioButton
+              name={`exams.${key}`}
+              width={16}
+              onChange={onSimpleChange}
+              label={key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
+              options={['Yes', 'No']}
+            />{' '}
+          </div>
+        ))}
+      </div>
 
-        {step == 3 && (
-          <>
-            {/* Instructor Information Section */}
-            {/* Other Information Section */}
-            <div className="col-span-3 border-b p-2"></div>
+      <div className={`${step == 3 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
+        <div className="col-span-3 border-b p-2"></div>
 
-            {Object.keys(formData.otherInfo).map((key) => (
-              <div key={key}>
-                <label className="block mb-2">
-                  {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}:
-                </label>
-                <div className="flex space-x-4">
-                  <label>
-                    <input
-                      type="checkbox"
-                      name={`otherInfo.${key}`}
-                      checked={formData.otherInfo[key]}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    Yes
-                  </label>
-                </div>
-              </div>
-            ))}
-          </>
-        )}
+        {Object.keys(formData.otherInfo).map((key) => (
+          <div className="col-span-3 md:col-span-1">
+            <RadioButton
+              name={`otherInfo.${key}`}
+              onChange={onSimpleChange}
+              label={key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
+              width={16}
+              options={['Yes', 'No']}
+            />
+          </div>
+        ))}
 
-        {step == 4 && (
-          <>
-            {/* Additional Information Section */}
-            <div className="col-span-3 border-b p-2"></div>
+        {/* Grade and Overall Rating */}
+        <div className="col-span-3 lg:col-span-2">
+          <RadioButton
+            name="gradeReceived"
+            onChange={onSimpleChange}
+            label="Grade Received"
+            width={16}
+            options={['A', 'B', 'C', 'D', 'F', 'Withdrew']}
+          />
+        </div>
 
-            <div className="col-span-1 md:col-span-3">
-              <label className="block mb-2">
-                Please provide any additional details about this course that you feel may be important to other
-                students. <b>Please do not leave this field blank, as it is often the most useful information.</b>
-              </label>
-              <textarea
-                name="comments"
-                value={formData.comments}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-          </>
-        )}
+        <div className="col-span-3 lg:col-span-1 md:col-span-2">
+          <RadioButton
+            name="overallRating"
+            onChange={onSimpleChange}
+            width={16}
+            label="Overall Rating"
+            options={['Poor', 'OK', 'Good']}
+            colors={['#AA0000', 'orange', 'blue']}
+          />
+        </div>
+      </div>
+
+      <div className={`${step == 4 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
+        {/* Comments Section */}
+        <div className="col-span-3 border-b p-2"></div>
+
+        <div className="col-span-1 md:col-span-3">
+          <label className="block mb-2">
+            Please provide any additional details about this course that you feel may be important to other students.{' '}
+            <b>Please do not leave this field blank, as it is often the most useful information.</b>
+          </label>
+          <textarea
+            name="comments"
+            value={formData.comments}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
       </div>
       <div className="mt-6 text-right">
         <input
