@@ -11,7 +11,7 @@ export default ({ step, setStep, stepItems }: StepComponentProps) => {
         {stepItems.map((item, idx) => (
           <li key={idx} aria-current={step == idx + 1 ? 'step' : false} className="flex-1 flex gap-x-2 md:items-center">
             <div
-              className={`w-8 h-8 rounded-full border-2 flex-none flex items-center justify-center ${step > idx + 1 ? 'bg-pe-blue pe-blue' : '' || step == idx + 1 ? 'border-pe-blue' : ''}`}
+              className={`w-8 h-8 rounded-full border flex-none flex items-center justify-center ${step > idx + 1 ? 'bg-pe-blue pe-blue' : '' || step == idx + 1 ? 'border-pe-blue' : ''}`}
             >
               <span className={` ${step > idx + 1 ? 'hidden' : '' || step == idx + 1 ? 'text-pe-blue' : ''}`}>
                 {idx + 1}
