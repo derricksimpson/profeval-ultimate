@@ -1,5 +1,6 @@
 ---
 import RadioButton from '~/components/RadioButton';
+import CookieConsent from '~/components/core/CookieConsent';
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
@@ -271,6 +272,10 @@ const metadata = {
     <div class="mt-8">
       <RadioButton />
     </div>
+
+    <div class="mt-8">
+      <CookieConsent />
+    </div>
+    <!-- main layout closing div -->
   </div>
-  <!-- main layout closing div -->
 </Layout>
