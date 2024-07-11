@@ -9,6 +9,38 @@ interface SectionHeaderProps {
   subHeading?: string;
 }
 
+const formConfig = {
+  otherInfo: {
+    textbookRequired: {
+      options: ['Yes', 'No'],
+      label: 'Textbook Required',
+      span: 1,
+    },
+    extraCredit: {
+      options: ['Yes', 'No'],
+      label: 'Extra Credit Available',
+      span: 1,
+    },
+    attendanceMandatory: {
+      options: ['Yes', 'No'],
+      label: 'Attendance Mandatory',
+      span: 1,
+    },
+    notesQuantity: {
+      options: ['Few/None', 'Moderate', 'Overkill'],
+      label: 'Quantity of Notes',
+      span: 3,
+      optionSize: 9,
+    },
+    courseDifficulty: {
+      options: ['Easy', 'Moderate', 'Difficult'],
+      label: 'Difficulty of Course',
+      span: 3,
+      optionSize: 9,
+    },
+  },
+};
+
 // Define a type for the step
 type Step = 1 | 2 | 3 | 4;
 
@@ -66,10 +98,11 @@ const EvaluationFormComponent = () => {
     name: string;
     value: string;
     onChange: Function;
+    placeholder?: string;
     type?: string;
   }
 
-  const TextInput: React.FC<TextInputProps> = React.memo(({ name, value, onChange, type = 'text' }) => {
+  const TextInput: React.FC<TextInputProps> = React.memo(({ name, value, placeholder, onChange, type = 'text' }) => {
     const [localValue, setLocalValue] = useState(value);
 
     const handleBlur = () => {
@@ -83,6 +116,7 @@ const EvaluationFormComponent = () => {
         type={type}
         name={name}
         value={localValue}
+        placeholder={placeholder}
         onChange={(e) => setLocalValue(e.target.value)}
         onBlur={handleBlur}
         className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
@@ -145,21 +179,31 @@ const EvaluationFormComponent = () => {
 
         {/* Professor's Name */}
         <div className="col-span-3 md:col-span-1">
-          <label className="block mb-2">
-            Professor's <b>Last</b> Name:
+          <label className="block mb-2 text-gray-800 font-medium">
+            Professor's <b className="text-black uppercase">Last</b> Name:
           </label>
-          <TextInput name="lastName" value={formData.lastName} onChange={onSimpleChange} />
+          <TextInput
+            name="lastName"
+            placeholder="Enter LAST name here"
+            value={formData.lastName}
+            onChange={onSimpleChange}
+          />
         </div>
         <div className="col-span-3 md:col-span-1">
-          <label className="block mb-2">Professor's First Name:</label>
-          <TextInput name="firstName" value={formData.firstName} onChange={onSimpleChange} />
+          <label className="block mb-2 text-gray-800 font-medium">Professor's First Name:</label>
+          <TextInput
+            name="firstName"
+            placeholder="Enter a first name"
+            value={formData.firstName}
+            onChange={onSimpleChange}
+          />
         </div>
         <div className="col-span-3 md:col-span-1"></div>
 
         {/* Subject, Course Number, Course Title */}
 
         <div className="lg:col-span-1 pt-2">
-          <label className="block mb-2">Subject Area:</label>
+          <label className="block mb-2 text-gray-800 font-medium">Subject Area:</label>
           <select
             name="subject"
             value={formData.subject}
@@ -171,7 +215,7 @@ const EvaluationFormComponent = () => {
           </select>
         </div>
         <div className="col-span-3 md:col-span-1 pt-2">
-          <label className="block mb-2">Course Number:</label>
+          <label className="block mb-2 text-gray-800 font-medium">Course Number:</label>
           <input
             type="text"
             name="courseNumber"
@@ -181,13 +225,30 @@ const EvaluationFormComponent = () => {
           />{' '}
         </div>
         <div className="col-span-3 md:col-span-1 pt-2">
-          <label className="block mb-2">Course Title:</label>
+          <label className="block mb-2 text-gray-800 font-medium">Course Title:</label>
           <input
             type="text"
             name="courseTitle"
             value={formData.courseTitle}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+        <div className="col-span-3 lg:col-span-1 md:col-span-2">
+          <RadioButton
+            name="overallRating"
+            onChange={onSimpleChange}
+            label="Overall Rating"
+            options={['Poor', 'OK', 'Good']}
+            colors={['#AA0000', 'orange', 'blue']}
+          />
+        </div>
+        <div className="col-span-3 lg:col-span-2">
+          <RadioButton
+            name="gradeReceived"
+            onChange={onSimpleChange}
+            label="Grade Received"
+            options={['A', 'B', 'C', 'D', 'F', 'Withdrew']}
           />
         </div>
       </div>
@@ -199,7 +260,6 @@ const EvaluationFormComponent = () => {
           <div className="col-span-3 md:col-span-1" key={key}>
             <RadioButton
               name={`exams.${key}`}
-              width={16}
               onChange={onSimpleChange}
               label={key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
               options={['Yes', 'No']}
@@ -211,39 +271,23 @@ const EvaluationFormComponent = () => {
       <div className={`${step == 3 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
         <div className="col-span-3 border-b p-2"></div>
 
-        {Object.keys(formData.otherInfo).map((key) => (
-          <div className="col-span-3 md:col-span-1">
-            <RadioButton
-              name={`otherInfo.${key}`}
-              onChange={onSimpleChange}
-              label={key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
-              width={16}
-              options={['Yes', 'No']}
-            />
-          </div>
-        ))}
+        {/* Course Information */}
+        {Object.keys(formConfig.otherInfo).map((key) => {
+          let item = formConfig.otherInfo[key];
+          return (
+            <div className={`col-span-3 md:col-span-${item.span}`}>
+              <RadioButton
+                name={`otherInfo.${key}`}
+                onChange={onSimpleChange}
+                label={item.label}
+                width={item.optionSize}
+                options={item.options}
+              />
+            </div>
+          );
+        })}
 
         {/* Grade and Overall Rating */}
-        <div className="col-span-3 lg:col-span-2">
-          <RadioButton
-            name="gradeReceived"
-            onChange={onSimpleChange}
-            label="Grade Received"
-            width={16}
-            options={['A', 'B', 'C', 'D', 'F', 'Withdrew']}
-          />
-        </div>
-
-        <div className="col-span-3 lg:col-span-1 md:col-span-2">
-          <RadioButton
-            name="overallRating"
-            onChange={onSimpleChange}
-            width={16}
-            label="Overall Rating"
-            options={['Poor', 'OK', 'Good']}
-            colors={['#AA0000', 'orange', 'blue']}
-          />
-        </div>
       </div>
 
       <div className={`${step == 4 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
@@ -251,7 +295,7 @@ const EvaluationFormComponent = () => {
         <div className="col-span-3 border-b p-2"></div>
 
         <div className="col-span-1 md:col-span-3">
-          <label className="block mb-2">
+          <label className="block mb-2 text-gray-800 font-medium">
             Please provide any additional details about this course that you feel may be important to other students.{' '}
             <b>Please do not leave this field blank, as it is often the most useful information.</b>
           </label>
@@ -259,7 +303,7 @@ const EvaluationFormComponent = () => {
             name="comments"
             value={formData.comments}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
+            className="w-full h-44 p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
           />
         </div>
       </div>
