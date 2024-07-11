@@ -134,25 +134,33 @@ export const getEvaluationSearchResults = async (Astro, params) => {
     const DB = Astro.locals.runtime.env.DB;
 
     let params = [];
-    let sql = 'SELECT * FROM Evaluations where schoolId = ? ';
+
+    let sql = `SELECT 
+      e.ID, p.lName, p.fName, e.grade, e.grade, p.subjects
+      FROM Evaluations e, Professors p
+      where e.professorId = p.ID
+      and p.schoolId = ? `;
+
     params.push(schoolId);
 
     if (subject) {
-      sql += 'and Subject = ? ';
+      sql += 'and e.Subject = ? ';
       params.push(subject);
     }
 
     if (callNumber) {
-      sql += 'and CallNumber = ? ';
+      sql += 'and e.CallNumber = ? ';
       params.push(callNumber);
     }
 
     if (lastName) {
-      sql += 'and LName = ? ';
-      params.push(lastName);
+      sql += 'and p.LName like ? ';
+      params.push(lastName + '%');
     }
 
-    sql += 'order by LName, FName limit 10 offset 60';
+    sql += 'order by p.lName, p.fName limit 25';
+
+    console.log('Query', sql);
 
     let response = await DB.prepare(sql)
       .bind(...params)
