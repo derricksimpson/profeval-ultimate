@@ -33,7 +33,7 @@ const EvaluationResultComponent: React.FC<EvaluationResultProps> = ({ evaluation
           <p className="text-center text-sm text-gray-500">
             {evaluation.Subject} - {evaluation.CourseTitle}
           </p>
-          <p className="text-center text-sm text-gray-500">Posted on: {evaluation.PostDate}</p>
+          <p className="text-center text-sm text-gray-500">Posted on: {`${evaluation.PostDate}`}</p>
         </div>
         <div className="md:w-3/4 p-4">
           <h3 className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-4">
@@ -43,9 +43,6 @@ const EvaluationResultComponent: React.FC<EvaluationResultProps> = ({ evaluation
             <div>
               <p>
                 <strong>Grade Received:</strong> {gradeOptions[evaluation.Grade]}
-              </p>
-              <p>
-                <strong>Comments:</strong> {evaluation.Comments}
               </p>
             </div>
             <div>
@@ -104,6 +101,12 @@ const EvaluationResultComponent: React.FC<EvaluationResultProps> = ({ evaluation
                 <strong>Overall Rating:</strong> {ratingOptions[evalData.o]}
               </p>
             </div>
+          </div>
+
+          <div>
+            <p>
+              <strong>Comments:</strong> {evaluation.Comments}
+            </p>
           </div>
         </div>
       </div>
