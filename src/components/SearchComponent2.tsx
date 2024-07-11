@@ -52,7 +52,7 @@ const SearchComponent = ({ initialQuery = '' }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 rounded-t-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-400 dark:focus:border-gray-400 focus:z-10 sm:text-sm bg-white dark:bg-gray-800"
-              placeholder="professor name school name or abbr"
+              placeholder="professor name; school name or abbr"
               required
             />
           </div>

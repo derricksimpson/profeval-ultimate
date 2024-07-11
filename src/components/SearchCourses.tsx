@@ -7,22 +7,44 @@ interface Subject {
 interface SearchCoursesProps {
   schoolId: number;
   courseSubjects: Subject[];
-  onSearch: (subject: string, courseNumber: string) => void;
+  onSearch: (subject: string, courseNumber: string, professorLastName: string) => void;
 }
 
 const SearchCourses: React.FC<SearchCoursesProps> = ({ schoolId, courseSubjects, onSearch }) => {
   const [subject, setSubject] = useState('');
   const [courseNumber, setCourseNumber] = useState('');
+  const [professorLastName, setProfessorLastName] = useState('');
   const [showCustomCourse, setShowCustomCourse] = useState(false);
 
-  const handleSearch = () => {
-    onSearch(subject, courseNumber);
+  const handleSearch = async () => {
+    const url = new URL('/api/evals', window.location.origin);
+    url.searchParams.append('Subject', subject);
+    url.searchParams.append('CurSchoolID', schoolId.toString());
+    if (courseNumber) {
+      url.searchParams.append('CallNumber', courseNumber);
+    }
+    if (professorLastName) {
+      url.searchParams.append('LName', professorLastName);
+    }
+
+    try {
+      const response = await fetch(url.toString());
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log(data);
+      //onSearch(subject, courseNumber, professorLastName); // Call the onSearch callback with the form data
+      console.log('API response data:', data); // Handle the response data
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
   };
 
   if (courseSubjects?.length > 0) {
     return (
       <div className="mt-4">
-        <h2 className="mt-6">Search By Department</h2>
+        <h2 className="mt-6 font-bold">Search By Department</h2>
         <div className="mt-4">
           <div style={{ position: 'relative' }}>
             <select className="p-2 border border-gray-200" value={subject} onChange={(e) => setSubject(e.target.value)}>
@@ -37,11 +59,19 @@ const SearchCourses: React.FC<SearchCoursesProps> = ({ schoolId, courseSubjects,
               type="text"
               name="courseNumber"
               placeholder="(optional) Course Number"
-              className="p-2  ml-2 border border-gray-200"
+              className="p-2 ml-2 border border-gray-200"
               value={courseNumber}
               onChange={(e) => setCourseNumber(e.target.value)}
             />
-            <button className="btn-primary p-2 ml-2 border border-gray-200" onClick={handleSearch}>
+            <input
+              type="text"
+              name="professorLastName"
+              placeholder="Professor Last Name"
+              className="p-2 ml-2 border border-gray-200"
+              value={professorLastName}
+              onChange={(e) => setProfessorLastName(e.target.value)}
+            />
+            <button className="btn-primary p-2-4 ml-2 border border-gray-200" onClick={handleSearch}>
               Search
             </button>
             <input
