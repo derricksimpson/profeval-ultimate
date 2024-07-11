@@ -16,14 +16,14 @@ export default ({ schoolId, schoolName, activeLetter }: Props) => {
 
   return (
     <div className="max-w-screen-xl mx-auto mt-2 px-4 text-gray-600 md:px-8">
-      <div className="hidden justify-center lg:flex" aria-label="Pagination">
-        <ul className="flex items-center">
+      <div aria-label="Pagination">
+        <ul className="hidden lg:inline-block">
           {pages.map((item, idx) => (
-            <li key={item}>
+            <li key={item} className="inline-block">
               <a
                 href={href + item}
                 aria-current={currentPage == item ? 'page' : false}
-                className={`h-10 px-4 py-2 border ${idx ? 'border-l-0' : ''} duration-150  ${currentPage == item ? 'bg-gray-300 font-medium' : 'hover:bg-gray-100'}`}
+                className={`inline-block w-7 h-7 text-center justify-center border ${idx ? 'border-l-0' : ''} duration-150  ${currentPage == item ? 'bg-gray-300 font-medium' : 'hover:bg-gray-100'}`}
               >
                 {item}
               </a>
@@ -31,39 +31,23 @@ export default ({ schoolId, schoolName, activeLetter }: Props) => {
           ))}
         </ul>
       </div>
-      {/* On mobile version */}
+      {/* On mobile version  - revert to a Select box*/}
       <div className="lg:hidden">
         <div className="flex flex-col">
-          <ul className="flex flex-wrap justify-between mb-2">
-            {pages
-              .filter((p) => p < 'N')
-              .map((item) => (
-                <li key={item} className="mt-5">
-                  <a
-                    href={href + item}
-                    aria-current={currentPage === item ? 'page' : undefined}
-                    className={` h-10 px-4 py-3 border border-l-0 duration-150 hover:bg-indigo-50 ${currentPage === item ? 'bg-indigo-50  font-medium' : ''}`}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-          </ul>
-          <ul className="flex flex-wrap justify-between">
-            {pages
-              .filter((p) => p >= 'N')
-              .map((item) => (
-                <li key={item} className="mt-5">
-                  <a
-                    href={href + item}
-                    aria-current={currentPage === item ? 'page' : undefined}
-                    className={` h-10 px-4 py-3 border border-l-0 duration-150 hover:bg-indigo-50 ${currentPage === item ? 'bg-indigo-50 font-medium' : ''}`}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-          </ul>
+          <select
+            value={currentPage}
+            onChange={(e) => {
+              setCurrentPage(e.target.value);
+              window.location.href = href + e.target.value;
+            }}
+            className="w-full h-10 px-4 py-2 border border-gray-300 rounded-md "
+          >
+            {pages.map((item, idx) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </div>
