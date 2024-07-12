@@ -38,7 +38,7 @@ const SearchComponent = ({ initialQuery = '' }) => {
   };
 
   return (
-    <div className="mt-12 flex flex-col items-center">
+    <div className="p-8 mt-12 flex flex-col items-center">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="mt-6 text-2xl font-bold">Search School or Professor</h2>
