@@ -6,7 +6,7 @@ export const getEvaluationsBySchool = async (id: number) => {};
 export const getEvaluationsBySchoolLetter = async (Astro, id: number, letter: string) => {
   const DB = Astro.locals.runtime.env.DB;
 
-  let response = await DB.prepare('SELECT * FROM Schools where RegionId = ? order by name').bind(id).all();
+  let response = await DB.prepare('SELECT * FROM professors where schoolId = ? and LName order by name').bind(id).all();
   let evaluations = response.results as Array<Evaluation>;
 };
 
@@ -136,7 +136,7 @@ export const getEvaluationSearchResults = async (Astro, params) => {
     let params = [];
 
     let sql = `SELECT 
-      e.ID, p.lName, p.fName, e.grade, e.grade, p.subjects
+     distinct p.lName, p.fName, p.overall, p.subjects, p.id as professorId, p.evaluationCount
       FROM Evaluations e, Professors p
       where e.professorId = p.ID
       and p.schoolId = ? `;

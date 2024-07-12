@@ -1,15 +1,20 @@
 ---
 import PageLayout from '~/layouts/PageLayout.astro';
-import { type School } from '~/models/School';
 
+import { getSchoolsByState } from '~/service/school-service';
 import { stateById } from '~/data/states';
 
 const { id } = Astro.params;
 let state = stateById(id);
-const DB = Astro.locals.runtime.env.DB;
+let schools = [];
 
-let response = await DB.prepare('SELECT * FROM Schools where RegionId = ? order by name').bind(id).all();
-let schools = response.results as Array<School>;
+if (state) {
+  schools = await getSchoolsByState(Astro, id);
+} else {
+  state = {
+    name: 'Error 404 - Missing State ',
+  } as any;
+}
 ---
 
 <PageLayout metadata={{ title: 'Colleges, Universities, and Technical or Community Colleges in' + state.name }}>
@@ -19,7 +24,7 @@ let schools = response.results as Array<School>;
     {
       schools.map((school, index) => (
         <a
-          href={`/school/${school.Name.replace(/'\\ '/, '-')}/${school.ID}`}
+          href={`/school/${school.toUrlFriendlyName()}/${school.ID}`}
           class={`block border ${index % 2 == 0 && 'bg-gray-100'}  border-gray-200 p-2`}
         >
           <h2 class="font-semibold text-lg">

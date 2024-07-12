@@ -1,5 +1,6 @@
 export class Professor {
   id: number;
+  professorId: number; // TODO: move to id
   schoolId: number;
   lName: string;
   lNameChar: string;

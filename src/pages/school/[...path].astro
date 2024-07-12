@@ -15,7 +15,8 @@ const schoolName = school?.Name || '';
 
 // TODO: Parallelize
 const initialSubjects = await evaluationService.getAllSubjects(Astro, schoolId);
-const initialProfs = (await getProfessorsBySchoolAndLetter(Astro, schoolId, letter)) as any;
+
+const initialProfs = letter && ((await getProfessorsBySchoolAndLetter(Astro, schoolId, letter)) as any);
 
 const metadata = {
   title: 'Professors at ' + schoolName + ' - Rate My Professor Here',

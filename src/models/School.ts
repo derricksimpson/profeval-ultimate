@@ -23,7 +23,6 @@ export class School {
 
   // Method to create a URL-friendly version of the school name
   toUrlFriendlyName(): string {
-    console.log('new name');
     return this.Name.toLowerCase().replace(/[^a-z0-9]+/g, '-'); // Replace non-alphanumeric characters with hyphens
   }
 }

@@ -6,7 +6,6 @@ export async function GET(context: APIContext) {
   let url = new URL(context.url);
 
   let page = params?.page?.toLowerCase();
-  console.log({ params });
 
   if (page === 'chooseschool.asp') {
     let stateId = url.searchParams.get('RegionID');

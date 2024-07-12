@@ -1,5 +1,11 @@
 export const stateById = (id: string) => states.find((state) => state.id === Number(id));
 
+export type State = {
+  id: number;
+  abbr: string;
+  name: string;
+};
+
 export const states = [
   { id: 1, abbr: 'AL', name: 'Alabama' },
   { id: 2, abbr: 'AK', name: 'Alaska' },

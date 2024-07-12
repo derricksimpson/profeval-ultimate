@@ -28,7 +28,7 @@ export const getSchoolsByState = async (context, state: string): Promise<School[
   if (state) {
     const DB = context.locals.runtime.env.DB;
     const db = DB;
-    let query = `SELECT * from schools where RegionId = ?`;
+    let query = `SELECT * from schools where RegionId = ? order by Name Asc`;
 
     let response = await DB.prepare(query).bind(state).all();
 
