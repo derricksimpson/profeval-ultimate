@@ -1,72 +1,50 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import LettersComponent from '~/components/core/LettersComponent';
-import TableComponent from '~/components/core/TableComponent';
-
+import ProfessorSearchComponent from '~/components/ProfessorSearchComponent';
+import * as evaluationService from '~/service/evaluation-service';
 import { getProfessorsBySchoolAndLetter } from '~/service/professor-service';
-import { getAllSubjects } from '~/service/evaluation-service';
 import { getSchoolById } from '~/service/school-service';
 
-import SearchCourses from '~/components/SearchCourses';
-
 const { path } = Astro.params;
-const [schoolName, schoolIdStr, letter] = path.split('/');
+const [_, schoolIdStr, letter] = path.split('/');
+
+let schoolId = Number(schoolIdStr);
+
+const school = await getSchoolById(Astro, schoolId);
+const schoolName = school?.Name || '';
+
+// TODO: Parallelize
+const initialSubjects = await evaluationService.getAllSubjects(Astro, schoolId);
+const initialProfs = (await getProfessorsBySchoolAndLetter(Astro, schoolId, letter)) as any;
 
 const metadata = {
   title: 'Professors at ' + schoolName + ' - Rate My Professor Here',
   description: 'Rate your professors at ' + schoolName + ' and help other students stay informed informed.',
 };
-
-let professors = [];
-let schoolId = Number(schoolIdStr);
-
-let school = await getSchoolById(Astro, schoolId);
-
-let courseSubjects = null;
-if (schoolId) {
-  courseSubjects = await getAllSubjects(Astro, schoolId);
-}
-
-if (letter) {
-  professors = await getProfessorsBySchoolAndLetter(Astro, Number(schoolId), letter);
-}
 ---
 
 <Layout metadata={metadata}>
-  <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold">{school.Name}</h1>
-
-    <div class="ml-12">
-      <SearchCourses
-        schoolId={schoolId}
-        courseSubjects={courseSubjects}
-        onSearch={(x, n) => {
-          alert(x + n);
-        }}
-        client:load
-      />
-    </div>
-
-    <div>
-      <h2 class="ml-12 mt-3 font-bold">Find your professor by last name</h2>
-      <div class="mt-4">
-        <LettersComponent schoolId={schoolIdStr} schoolName={schoolName} activeLetter={letter} />
-      </div>
-    </div>
-
-    {
-      letter && (
-        <TableComponent schoolId={Number(schoolId)} schoolURL={school.toUrlFriendlyName()} professors={professors} />
-      )
-    }
+  <div class="container mx-auto p-2">
+    <ProfessorSearchComponent
+      context={Astro}
+      schoolId={schoolId}
+      letter={letter}
+      initialSubjects={initialSubjects}
+      initialProfessors={initialProfs}
+      schoolName={schoolName}
+      client:load={true}
+    />
   </div>
 </Layout>
 
-<script define:vars={{ schoolId }}>
+<script define:vars={{ schoolId, schoolName }}>
   window.localStorage.setItem('schoolId', schoolId);
+  window.localStorage.setItem('schoolName', schoolName);
+
   const date = new Date();
-  const days = 36;
-  date.setTime(date.getTime() + days * 20 * 24 * 60 * 60 * 1000);
-  const expires = 'expires=' + date.toUTCString();
-  document.cookie = 'schoolId=' + schoolId + ';' + expires + ';path=/';
+  const days = 365;
+
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+
+  document.cookie = 'schoolId=' + schoolId + ';expires=' + date.toUTCString() + ';path=/';
 </script>

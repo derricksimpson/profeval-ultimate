@@ -3,10 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { type EvaluationForm, initialEvaluationForm } from '~/models/EvaluationForm';
 import StepsComponent from '../StepsComponent';
 import RadioButton from '../RadioButton';
+import SchoolSelectorComponent from '../SchoolSelectorComponent';
+import type { School } from '~/models/School';
 
 interface SectionHeaderProps {
   sectionLabel: string;
   subHeading?: string;
+}
+
+interface Subject {
+  Subject: string;
 }
 
 const formConfig = {
@@ -47,10 +53,26 @@ type Step = 1 | 2 | 3 | 4;
 const EvaluationFormComponent = () => {
   const [formData, setFormData] = useState<EvaluationForm>(initialEvaluationForm);
   const [step, setStep] = useState<Step>(1);
+  const [schoolId, setSchoolId] = useState<string>(localStorage.getItem('schoolId') || '');
+  const [schoolName, setSchoolName] = useState<string>(localStorage.getItem('schoolName') || '');
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
   const nextStep = (step: Step) => {
     if (step < 1 || step > 4) return;
     setStep(step);
+  };
+
+  useEffect(() => {
+    fetch('/api/subjects?schoolId=' + schoolId)
+      .then((res) => res.json())
+      .then((data) => setSubjects(data));
+  }, [schoolId]);
+
+  const onSchoolChange = (school: School) => {
+    setSchoolId(school.ID.toString());
+    setSchoolName(school.Name);
+    localStorage.setItem('schoolId', school.ID.toString());
+    localStorage.setItem('schoolName', school.Name);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -84,7 +106,7 @@ const EvaluationFormComponent = () => {
             [field]: value,
           },
         };
-        console.log(newState);
+
         return newState;
       });
       return;
@@ -152,7 +174,26 @@ const EvaluationFormComponent = () => {
       onSubmit={handleSubmit}
       className="max-w-6xl mx-auto mt-4 mb-6 p-6 bg-white dark:bg-gray-900 rounded-lg shadow-md"
     >
-      <h2 className="text-2xl font-bold mb-4">Post an Evaluation</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 justify-between items-center">
+        <h2 className="text-2xl font-bold mb-6 flex-1">Post an Evaluation</h2>
+        {schoolName && (
+          <h3 className="font-semibold mb-4 md:text-right">
+            {schoolName} (
+            <a
+              className="underline text-blue-700"
+              onClick={() => {
+                setSchoolId('');
+                setSchoolName('');
+              }}
+              href="#"
+            >
+              Switch School
+            </a>
+            )
+          </h3>
+        )}
+      </div>
+
       {/* <p className="mb-6">
         The following form is broken into four easily digestible sections. Please take the time to fill out the form as
         completely as possible. The more relevant and accurate information you provide, the more useful it is to other
@@ -172,6 +213,8 @@ const EvaluationFormComponent = () => {
         setStep={nextStep}
         stepItems={['General Information', 'Exam Information', 'Course Information', 'Comments']}
       />
+
+      {schoolId == '' && <SchoolSelectorComponent onSchoolChanged={onSchoolChange} />}
 
       <div className={`${step == 1 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
         {/* General Information Section */}
@@ -211,7 +254,7 @@ const EvaluationFormComponent = () => {
             className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
           >
             <option value="">Choose One</option>
-            {/* Add options dynamically */}
+            {subjects && subjects.map((item) => <option value={item.Subject}>{item.Subject}</option>)}
           </select>
         </div>
         <div className="col-span-3 md:col-span-1 pt-2">
