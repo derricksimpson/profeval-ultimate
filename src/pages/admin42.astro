@@ -1,0 +1,16 @@
+---
+export const prerender = true;
+import AdminComponent from '~/components/AdminComponent';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Blank',
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="container mx-auto">
+    <h1 class="text-3xl font-bold mt-8">Admin</h1>
+    <!-- <AdminComponent client:only="react" /> -->
+  </div>
+</Layout>
