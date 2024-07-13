@@ -1,5 +1,6 @@
 import type { Evaluation, EvaluationData } from '~/models/Evaluation';
 import { measureQuery } from './metrics-service';
+import { EvaluationMap } from '~/models/EvaluationMap';
 
 export const getEvaluationsBySchool = async (id: number) => {};
 
@@ -106,6 +107,25 @@ export const getEmptyEvaluations = async (Astro) => {
       .all();
 
     return response.results;
+  } catch (e) {
+    console.error('failed on query', e);
+  }
+};
+
+export const getEvaluationDetailsById = async (Astro, evaluationId: number) => {
+  try {
+    let sql = `SELECT p.id as professorId, p.lName, p.fName, p.schoolId, s.name as schoolName
+    FROM evaluations e, professors p, schools s
+    where e.professorId = p.id
+    and p.schoolId = s.id
+    and e.ID = ?`;
+
+    // transpose school ID
+
+    const DB = Astro.locals.runtime.env.DB;
+    let response = await DB.prepare(sql).bind(evaluationId).all();
+
+    return EvaluationMap.fromRaw(response.results[0]);
   } catch (e) {
     console.error('failed on query', e);
   }

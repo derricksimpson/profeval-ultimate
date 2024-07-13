@@ -1,5 +1,6 @@
 import { stateById } from '~/data/states';
 import type { APIContext } from 'astro';
+import { getEvaluationDetailsById } from '~/service/evaluation-service';
 
 // NOTE: we may choose to use /evaluations/ directly instad of redirects
 /* 
@@ -13,13 +14,23 @@ http://localhost:4321/evaluations/list.asp?CurSchoolID=908&Subject=&CallNumber=&
 http://localhost:4321/evaluations/list.asp?Subject=CS&CallNumber=&LName=
 
 
-http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=&CallNumber=&LName=S&Sort=6&ID=9738&options=next
+-- Specific IDs
+
+
+
+Working
 http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=ART&CallNumber=240&LName=&Sort=6&ID=13525
 http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=CS&CallNumber=&LName=&Sort=5&ID=3637
 
-Working
 http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=CS&CallNumber=&LName=&Sort=3&ID=5360
 http://localhost:4321/evaluations/view.asp?Subject=&CallNumber=&LName=Browder&Sort=0&ID=18197
+
+http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=&CallNumber=&LName=S&Sort=6&ID=9738&options=next
+
+
+http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=&CallNumber=&LName=&Sort=4&ID=14169
+-> to  http://localhost:4321/professors/Western%20Kentucky%20University/908/Hardin-Joe%20M./2142?evaluationId=14169
+
 */
 
 export const permRedirect = (url: string) => {
@@ -57,7 +68,13 @@ export async function GET(context: APIContext) {
   if (page === 'view.asp') {
     console.log('redirect to view.asp');
     let id = url.searchParams.get('ID');
-    return permRedirect(`/evaluation/${id}`);
+    let details = await getEvaluationDetailsById(context, Number(id));
+
+    // http://localhost:4321/professors/Western%20Kentucky%20University/908/Hardin-Joe%20M./2142?evaluationId=14169
+
+    return permRedirect(
+      `/professors/${details.urlFriendlySchoolName()}/${details.schoolId}/${details.urlFriendlyProfName()}/${details.professorId}?evaluationId=${id}`
+    );
   }
 
   return new Response(null, {

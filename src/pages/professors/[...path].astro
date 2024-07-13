@@ -10,10 +10,8 @@ import EvaluationSummaryComponent from '~/components/core/EvaluationSummaryCompo
 const { path } = Astro.params;
 const [_, schoolId, professor_name, professorId] = path.split('/');
 
-const metadata = {
-  title: professor_name + ' - Rate My Professor Here',
-  description: 'Rate your professors at and help other students stay informed informed.',
-};
+let queryParams = new URL(Astro.url);
+let evaluationId = queryParams.searchParams.get('evaluationId');
 
 // let school = await getSchoolById(Astro, Number(schoolId));
 
@@ -28,6 +26,11 @@ let [school, evaluations, professor] = await Promise.all([
 if (!professor || !school || !evaluations) {
   return new Response('Not Found');
 }
+
+const metadata = {
+  title: professor.fName + ' ' + professor.lName + ': ProfEval - Rate My Professor Here',
+  description: 'Rate your professors at and help other students stay informed informed.',
+};
 // if (letter) {
 //   professors = await getProfessorsEvaluations(Astro, Number(professorId), letter);
 // }
@@ -46,7 +49,7 @@ if (!professor || !school || !evaluations) {
     <div class="mt-5 border border-gray-100 rounded-lg shadow-md">
       <ProfessorCardComponent professor={professor} evaluations={evaluations} />
 
-      <EvaluationSummaryComponent evaluations={evaluations} />
+      <EvaluationSummaryComponent evaluationId={evaluationId} evaluations={evaluations} client:load />
     </div>
   </div>
 </Layout>
