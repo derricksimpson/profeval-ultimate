@@ -19,9 +19,9 @@ export default ({ schoolURL: schoolName, schoolId, professors }: TableComponentP
         <table className="w-full table-auto  text-left">
           <thead className="bg-gray-50 text-gray-600 font-medium border-b">
             <tr>
-              <th className="py-3 px-6">Name</th>
-              <th className="py-3 px-6 hidden sm:table-cell">Subjects</th>
-              <th className="py-3 px-6">Total Evaluations</th>
+              <th className="py-2 px-2">Name</th>
+              <th className="py-2 px-2 hidden sm:table-cell">Subjects</th>
+              <th className="py-1 px-3">Total Evaluations</th>
             </tr>
           </thead>
           <tbody className="text-gray-600 divide-y  text-lg md:text-base">
@@ -33,7 +33,7 @@ export default ({ schoolURL: schoolName, schoolId, professors }: TableComponentP
                 return (
                   <tr key={idx} className={`${idx % 2 === 0 ? 'bg-gray-100' : 'bg-white'} hover:bg-yellow-50`}>
                     <td className="flex items-center whitespace-nowrap">
-                      <a href={link} className="py-3 px-5 block w-full h-full">
+                      <a href={link} className="px-1 py-2 block w-full h-full">
                         <div className="ml-1">
                           <span className="text-gray-700 font-medium">{item.lName}</span>,{' '}
                           <span className="text-gray-700">{item.fName}</span>
@@ -44,17 +44,17 @@ export default ({ schoolURL: schoolName, schoolId, professors }: TableComponentP
                       </a>
                     </td>
                     <td className="whitespace-nowrap hidden sm:table-cell">
-                      <a href={link} className="px-6 py-4 block w-full h-full">
+                      <a href={link} className="px-1 py-2 block w-full h-full">
                         {item.subjects?.replaceAll(',', ', ')}
                       </a>
                     </td>
                     <td className="whitespace-nowrap">
-                      <a href={link} className="px-6 py-4  block w-full h-full">
+                      <a href={link} className="px-1 py-2 block w-full h-full">
                         {item.evaluationCount}
                       </a>
                     </td>
                   </tr>
-                );
+                )
               })}
           </tbody>
         </table>
