@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { type Evaluation, type EvaluationData } from '~/models/Evaluation';
+import Chip from '../ChipComponent';
+
 import { BsEmojiSmile } from 'react-icons/bs';
 import { BsEmojiNeutral } from 'react-icons/bs';
 import { BsEmojiFrown } from 'react-icons/bs';
 import { GoQuestion } from 'react-icons/go';
+
 
 const gradeOptions = ['Not Specified', 'A', 'B', 'C', 'D', 'F', 'Withdrew'];
 const ratingOptions = ['Not Specified', 'Good', 'OK', 'Poor'];
@@ -18,18 +21,82 @@ const IconMap = [
   <BsEmojiFrown className="inline-block" />,
 ];
 
+
+const tagFullNames = {
+  tf: "True/False",
+  mc: "Multiple Choice",
+  m: "Matching",
+  fitb: "Fill in the Blank",
+  e: "Essays",
+  ps: "Problem Solving",
+  mf: "Mandatory Final",
+  cf: "Cumulative Final",
+  tb: "Textbook Required",
+  ec: "Extra Credit",
+  at: "Attendance Required"
+};
+
 type EvaluationSummaryProps = {
   evaluations: Evaluation[];
   evaluationId?: string;
+};
+
+const getChipColors = (category: string, value: number) => {
+  const defaultColors = { color: 'bg-gray-200', textColor: 'text-gray-800' };
+
+  const colorMaps = {
+    rating: [
+      defaultColors,
+      { color: 'bg-green-500', textColor: 'text-white' },
+      { color: 'bg-yellow-400', textColor: 'text-gray-800' },
+      { color: 'bg-red-500', textColor: 'text-white' },
+    ],
+    grade: [
+      defaultColors,
+      { color: 'bg-green-500', textColor: 'text-white' },
+      { color: 'bg-green-400', textColor: 'text-white' },
+      { color: 'bg-yellow-400', textColor: 'text-gray-800' },
+      { color: 'bg-orange-500', textColor: 'text-white' },
+      { color: 'bg-red-500', textColor: 'text-white' },
+      { color: 'bg-gray-500', textColor: 'text-white' },
+    ],
+    notes: [
+      defaultColors,
+      { color: 'bg-green-500', textColor: 'text-white' },
+      { color: 'bg-yellow-400', textColor: 'text-gray-800' },
+      { color: 'bg-red-500', textColor: 'text-white' },
+    ],
+    difficulty: [
+      defaultColors,
+      { color: 'bg-green-500', textColor: 'text-white' },
+      { color: 'bg-yellow-400', textColor: 'text-gray-800' },
+      { color: 'bg-red-500', textColor: 'text-white' },
+    ],
+  };
+
+  return colorMaps[category][value] || defaultColors;
 };
 
 const EvaluationSummaryComponent: React.FC<EvaluationSummaryProps> = ({
   evaluations,
   evaluationId,
 }: EvaluationSummaryProps) => {
-  const Icon = (overall) => {
-    return IconMap[overall] || <GoQuestion />;
+  const calculateTagCounts = () => {
+    const counts = {
+      tf: 0, mc: 0, m: 0, fitb: 0, e: 0, ps: 0, mf: 0, cf: 0, tb: 0, ec: 0, at: 0
+    };
+
+    evaluations.forEach(evaluation => {
+      const evalData: EvaluationData = JSON.parse(evaluation.EvaluationData);
+      Object.keys(counts).forEach(key => {
+        if (evalData[key] === 1) counts[key]++;
+      });
+    });
+
+    return counts;
   };
+
+  const tagCounts = calculateTagCounts();
 
   useEffect(() => {
     if (evaluationId) {
@@ -52,6 +119,14 @@ const EvaluationSummaryComponent: React.FC<EvaluationSummaryProps> = ({
   return (
     <div className="p-6 bg-white">
       <h2 className="font-bold text-gray-800 dark:text-gray-200 mb-4">{evaluations.length} Total Evaluations</h2>
+      <div className="mb-4">
+        <h3 className="font-semibold mb-2">Tag Summary:</h3>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(tagCounts).map(([key, count]) => (
+            count > 0 && <Chip key={key} label={`${tagFullNames[key]}: ${count}`} />
+          ))}
+        </div>
+      </div>
       <div className="space-y-4">
         {evaluations.map((evaluation, idx) => {
           const evalData: EvaluationData = JSON.parse(evaluation.EvaluationData);
@@ -71,19 +146,35 @@ const EvaluationSummaryComponent: React.FC<EvaluationSummaryProps> = ({
                   View Details
                 </a>
               </div>
-              <div className="mb-2">Tags</div>
+
               <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
                 <div>
-                  <strong>Overall Rating:</strong> {Icon(evalData?.o)} {ratingOptions[evalData.o]}
+                  <strong>Overall Rating:</strong>{' '}
+                  <Chip
+                    label={ratingOptions[evalData.o]}
+                    {...getChipColors('rating', evalData.o)}
+                  />
                 </div>
                 <div>
-                  <strong>Grade:</strong> {gradeOptions[evaluation.Grade]}
+                  <strong>Grade:</strong>{' '}
+                  <Chip
+                    label={gradeOptions[evaluation.Grade]}
+                    {...getChipColors('grade', evaluation.Grade)}
+                  />
                 </div>
                 <div>
-                  <strong>Quantity of Notes:</strong> {notesOptions[evalData.n]}
+                  <strong>Quantity of Notes:</strong>{' '}
+                  <Chip
+                    label={notesOptions[evalData.n]}
+                    {...getChipColors('notes', evalData.n)}
+                  />
                 </div>
                 <div>
-                  <strong>Difficulty:</strong> {difficultyOptions[evalData.d]}
+                  <strong>Difficulty:</strong>{' '}
+                  <Chip
+                    label={difficultyOptions[evalData.d]}
+                    {...getChipColors('difficulty', evalData.d)}
+                  />
                 </div>
               </div>
 

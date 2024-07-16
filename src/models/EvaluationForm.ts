@@ -1,5 +1,7 @@
 // models/EvaluationForm.ts
 export interface EvaluationForm {
+  schoolId?: string;
+  professorId?: string;
   firstName: string;
   lastName: string;
   subject: string;
