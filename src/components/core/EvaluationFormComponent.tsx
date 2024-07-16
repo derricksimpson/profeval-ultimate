@@ -176,22 +176,7 @@ const EvaluationFormComponent = () => {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 justify-between items-center">
         <h2 className="text-2xl font-bold mb-6 flex-1">Post an Evaluation</h2>
-        {schoolName && (
-          <h3 className="font-semibold mb-4 md:text-right">
-            {schoolName} (
-            <a
-              className="underline text-blue-700"
-              onClick={() => {
-                setSchoolId('');
-                setSchoolName('');
-              }}
-              href="#"
-            >
-              Switch School
-            </a>
-            )
-          </h3>
-        )}
+
       </div>
 
       {/* <p className="mb-6">
@@ -215,6 +200,23 @@ const EvaluationFormComponent = () => {
       />
 
       {schoolId == '' && <SchoolSelectorComponent onSchoolChanged={onSchoolChange} />}
+
+      {schoolName && (
+        <h3 className="font-semibold mt-4 ">
+          {schoolName} (
+          <a
+            className="underline text-blue-700"
+            onClick={() => {
+              setSchoolId('');
+              setSchoolName('');
+            }}
+            href="#"
+          >
+            Switch School
+          </a>
+          )
+        </h3>
+      )}
 
       <div className={`${step == 1 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
         {/* General Information Section */}
