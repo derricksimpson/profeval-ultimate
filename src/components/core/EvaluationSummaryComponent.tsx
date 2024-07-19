@@ -22,23 +22,11 @@ const IconMap = [
 ];
 
 
-const tagFullNames = {
-  tf: "True/False",
-  mc: "Multiple Choice",
-  m: "Matching",
-  fitb: "Fill in the Blank",
-  e: "Essays",
-  ps: "Problem Solving",
-  mf: "Mandatory Final",
-  cf: "Cumulative Final",
-  tb: "Textbook Required",
-  ec: "Extra Credit",
-  at: "Attendance Required"
-};
-
 type EvaluationSummaryProps = {
   evaluations: Evaluation[];
   evaluationId?: string;
+  schoolId: string;
+  professorId: string;
 };
 
 const getChipColors = (category: string, value: number) => {
@@ -80,23 +68,10 @@ const getChipColors = (category: string, value: number) => {
 const EvaluationSummaryComponent: React.FC<EvaluationSummaryProps> = ({
   evaluations,
   evaluationId,
+  schoolId,
+  professorId,
 }: EvaluationSummaryProps) => {
-  const calculateTagCounts = () => {
-    const counts = {
-      tf: 0, mc: 0, m: 0, fitb: 0, e: 0, ps: 0, mf: 0, cf: 0, tb: 0, ec: 0, at: 0
-    };
 
-    evaluations.forEach(evaluation => {
-      const evalData: EvaluationData = JSON.parse(evaluation.EvaluationData);
-      Object.keys(counts).forEach(key => {
-        if (evalData[key] === 1) counts[key]++;
-      });
-    });
-
-    return counts;
-  };
-
-  const tagCounts = calculateTagCounts();
 
   useEffect(() => {
     if (evaluationId) {
@@ -119,14 +94,7 @@ const EvaluationSummaryComponent: React.FC<EvaluationSummaryProps> = ({
   return (
     <div className="p-6 bg-white">
       <h2 className="font-bold text-gray-800 dark:text-gray-200 mb-4">{evaluations.length} Total Evaluations</h2>
-      <div className="mb-4">
-        <h3 className="font-semibold mb-2">Tag Summary:</h3>
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(tagCounts).map(([key, count]) => (
-            count > 0 && <Chip key={key} label={`${tagFullNames[key]}: ${count}`} />
-          ))}
-        </div>
-      </div>
+
       <div className="space-y-4">
         {evaluations.map((evaluation, idx) => {
           const evalData: EvaluationData = JSON.parse(evaluation.EvaluationData);
@@ -139,12 +107,10 @@ const EvaluationSummaryComponent: React.FC<EvaluationSummaryProps> = ({
             >
               <div className="flex justify-between items-center">
                 <p className="text-md font-medium mb-2">
-                  {evaluation.Subject}-{evaluation.CallNumber} : {evaluation.CourseTitle} -{' '}
-                  <span className="font-normal">Posted on {evaluation.PostDate as any}</span>
+                  {evaluation.Subject}-{evaluation.CallNumber} : {evaluation.CourseTitle}{'   '}
+                  - {'   '}
+                  <span className="font-normal">Posted {new Date(evaluation.PostDate).toLocaleDateString('en-US')}</span>
                 </p>
-                <a href={`/evaluation/${evaluation.ID}`} className="btn-secondary font-bold py-2 px-4 rounded">
-                  View Details
-                </a>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
@@ -185,6 +151,9 @@ const EvaluationSummaryComponent: React.FC<EvaluationSummaryProps> = ({
             </div>
           );
         })}
+      </div>
+      <div className="mt-2">
+        <a href={`/evaluate?professorId=${professorId}&schoolId=${schoolId}`} className="btn-secondary text-small">Post your own Evaluation </a>
       </div>
     </div>
   );

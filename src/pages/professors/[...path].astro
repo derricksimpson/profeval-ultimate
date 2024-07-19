@@ -31,6 +31,7 @@ const metadata = {
   title: professor.fName + ' ' + professor.lName + ': ProfEval - Rate My Professor Here',
   description: 'Rate your professors at and help other students stay informed informed.',
 };
+
 // if (letter) {
 //   professors = await getProfessorsEvaluations(Astro, Number(professorId), letter);
 // }
@@ -47,9 +48,15 @@ const metadata = {
       > / <span class="font-normal">{professor?.fName} {professor?.lName}</span>
     </h1>
     <div class="mt-5 border border-gray-100 rounded-lg shadow-md">
-      <ProfessorCardComponent professor={professor} evaluations={evaluations} />
+      <ProfessorCardComponent professor={professor} evaluations={evaluations} schoolId={schoolId} />
 
-      <EvaluationSummaryComponent evaluationId={evaluationId} evaluations={evaluations} client:load />
+      <EvaluationSummaryComponent
+        evaluationId={evaluationId}
+        evaluations={evaluations}
+        professorId={professorId}
+        schoolId={schoolId}
+        client:load
+      />
     </div>
   </div>
 </Layout>

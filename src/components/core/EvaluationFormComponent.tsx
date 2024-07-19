@@ -5,6 +5,8 @@ import StepsComponent from '../StepsComponent';
 import RadioButton from '../RadioButton';
 import SchoolSelectorComponent from '../SchoolSelectorComponent';
 import type { School } from '~/models/School';
+import ProfessorSelectComponent from './ProfessorSelectComponent';
+import type { Professor } from '~/models/Professor';
 
 interface SectionHeaderProps {
   sectionLabel: string;
@@ -164,6 +166,14 @@ const EvaluationFormComponent = () => {
     // Submit form data to the backend
   };
 
+  const onProfessorSelected = (professor: Professor) => {
+    let professorId = professor.id;
+
+    setFormData((prevState) => {
+      return { ...prevState, professorId };
+    });
+  }
+
   useEffect(() => {
     // Fetch backend data if needed and set initial form state
     // Example: fetch('/api/form-data').then(res => res.json()).then(data => setFormData(data));
@@ -221,7 +231,9 @@ const EvaluationFormComponent = () => {
       <div className={`${step == 1 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
         {/* General Information Section */}
         <div className="col-span-3 border-b p-2"></div>
-
+        <div className="col-span-3">
+          <ProfessorSelectComponent schoolId={schoolId} onProfessorSelected={onProfessorSelected} />
+        </div>
         {/* Professor's Name */}
         <div className="col-span-3 md:col-span-1">
           <label className="block mb-2 text-gray-800 font-medium">

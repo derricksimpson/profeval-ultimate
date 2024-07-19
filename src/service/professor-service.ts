@@ -18,17 +18,42 @@ export async function getProfessorById(Astro, id: number) {
 export const getProfessorsBySchoolAndLetter = async (Astro, id: number, letter: string) => {
   const DB = Astro.locals.runtime.env.DB;
   const db = DB;
-  console.log({ id, letter });
+
   let query = `SELECT id as professorId, LName as lName, FName as fName, subjects , evaluationCount
     FROM professors p
     WHERE p.SchoolId = ? AND LNameChar = UPPER(?)
     ORDER BY p.LName, p.FName
   `;
 
-  console.log('Query:', query);
   //let query = `select * from aggregated_school_professors where SchoolId = ? and LNameChar = ?;`;
 
   let response = await DB.prepare(query).bind(id, letter).all();
+
+  await measureQuery(db, { query, response }, 'getProfessorsBySchoolAndLetter');
+
+  let evaluations = response?.results as Array<Evaluation>;
+
+  return evaluations;
+};
+
+export const searchProfessorsBySchool = async (Astro, schoolId: number, lastName: string) => {
+  const DB = Astro.locals.runtime.env.DB;
+  const db = DB;
+
+  // if lastname isn't larger than 2 characters, return empty
+  if (lastName.length < 2) return [];
+
+  let query = `SELECT id as professorId, LName as lName, FName as fName, subjects , evaluationCount
+    FROM professors p
+    WHERE p.SchoolId = ? 
+    AND LNameChar = UPPER(?)
+    AND LName like ?
+    ORDER BY p.LName, p.FName
+  `;
+
+  let letter = lastName.substring(0, 1).toUpperCase();
+
+  let response = await DB.prepare(query).bind(schoolId, letter, lastName + '%').all();
 
   await measureQuery(db, { query, response }, 'getProfessorsBySchoolAndLetter');
 
