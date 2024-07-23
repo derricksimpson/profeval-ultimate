@@ -168,11 +168,11 @@ const EvaluationFormComponent = () => {
 
   const onProfessorSelected = (professor: Professor) => {
     let professorId = professor.id;
-
+    console.log('professor selected', professor);
     setFormData((prevState) => {
       return { ...prevState, professorId };
     });
-  }
+  };
 
   useEffect(() => {
     // Fetch backend data if needed and set initial form state
@@ -186,7 +186,6 @@ const EvaluationFormComponent = () => {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 justify-between items-center">
         <h2 className="text-2xl font-bold mb-6 flex-1">Post an Evaluation</h2>
-
       </div>
 
       {/* <p className="mb-6">
