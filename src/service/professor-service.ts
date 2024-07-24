@@ -3,6 +3,9 @@ import { measureQuery } from './metrics-service';
 import { Professor } from '~/models/Professor';
 
 export async function getProfessorById(Astro, id: number) {
+  if (!id) {
+    return null;
+  }
   const DB = Astro.locals.runtime.env.DB;
 
   let query = `SELECT * from professors where id = ?`;
@@ -53,7 +56,9 @@ export const searchProfessorsBySchool = async (Astro, schoolId: number, lastName
 
   let letter = lastName.substring(0, 1).toUpperCase();
 
-  let response = await DB.prepare(query).bind(schoolId, letter, lastName + '%').all();
+  let response = await DB.prepare(query)
+    .bind(schoolId, letter, lastName + '%')
+    .all();
 
   await measureQuery(db, { query, response }, 'getProfessorsBySchoolAndLetter');
 

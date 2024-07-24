@@ -53,6 +53,14 @@ const formConfig = {
 type Step = 1 | 2 | 3 | 4;
 
 const EvaluationFormComponent = () => {
+  let professor = (window as any).professor || {};
+
+  if (professor) {
+    initialEvaluationForm.professorId = professor.id;
+    initialEvaluationForm.firstName = professor.fName;
+    initialEvaluationForm.lastName = professor.lName;
+  }
+
   const [formData, setFormData] = useState<EvaluationForm>(initialEvaluationForm);
   const [step, setStep] = useState<Step>(1);
   const [schoolId, setSchoolId] = useState<string>(localStorage.getItem('schoolId') || '');
@@ -168,7 +176,6 @@ const EvaluationFormComponent = () => {
 
   const onProfessorSelected = (professor: Professor) => {
     let professorId = professor.id;
-    console.log('professor selected', professor);
     setFormData((prevState) => {
       return { ...prevState, professorId };
     });
@@ -230,20 +237,12 @@ const EvaluationFormComponent = () => {
       <div className={`${step == 1 ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-3 gap-2 gap-y-6`}>
         {/* General Information Section */}
         <div className="col-span-3 border-b p-2"></div>
-        <div className="col-span-3">
-          <ProfessorSelectComponent schoolId={schoolId} onProfessorSelected={onProfessorSelected} />
-        </div>
-        {/* Professor's Name */}
+
         <div className="col-span-3 md:col-span-1">
           <label className="block mb-2 text-gray-800 font-medium">
             Professor's <b className="text-black uppercase">Last</b> Name:
           </label>
-          <TextInput
-            name="lastName"
-            placeholder="Enter LAST name here"
-            value={formData.lastName}
-            onChange={onSimpleChange}
-          />
+          <ProfessorSelectComponent formData={formData} setFormData={setFormData} schoolId={schoolId} />
         </div>
         <div className="col-span-3 md:col-span-1">
           <label className="block mb-2 text-gray-800 font-medium">Professor's First Name:</label>

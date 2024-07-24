@@ -2,13 +2,15 @@ import { useState, useRef } from 'react';
 import Downshift from 'downshift';
 import type { Professor } from '~/models/Professor';
 import type { CSSProperties } from 'react';
+import type { EvaluationForm } from '~/models/EvaluationForm';
 
 type Props = {
   schoolId: string;
-  onProfessorSelected: (professor: Professor) => void;
+  formData: EvaluationForm;
+  setFormData: React.Dispatch<React.SetStateAction<EvaluationForm>>;
 };
 
-const ProfessorSelectComponent = ({ schoolId, onProfessorSelected }: Props) => {
+const ProfessorSelectComponent = ({ schoolId, formData, setFormData }: Props) => {
   const [suggestions, setSuggestions] = useState<Professor[]>([]);
   const cache = useRef<{ [letter: string]: Professor[] }>({});
 
@@ -16,9 +18,7 @@ const ProfessorSelectComponent = ({ schoolId, onProfessorSelected }: Props) => {
     if (inputValue.length >= 1) {
       const firstLetter = inputValue[0].toLowerCase();
 
-      // Check if the first letter is cached
       if (cache.current[firstLetter]) {
-        // Filter cached results based on the input value
         const filteredSuggestions = cache.current[firstLetter].filter((professor) =>
           professor.lName.toLowerCase().startsWith(inputValue.toLowerCase())
         );
@@ -30,38 +30,56 @@ const ProfessorSelectComponent = ({ schoolId, onProfessorSelected }: Props) => {
             throw new Error('Network response was not ok');
           }
           const data = await response.json();
-          cache.current[firstLetter] = data; // Cache the results
+          cache.current[firstLetter] = data;
 
-          // Filter the results based on the input value
           const filteredSuggestions = data.filter((professor) =>
             professor.lName.toLowerCase().startsWith(inputValue.toLowerCase())
           );
           setSuggestions(filteredSuggestions);
         } catch (error) {
           console.error('Error fetching suggestions:', error);
-          setSuggestions([]); // Clear suggestions on error
+          setSuggestions([]);
         }
       }
     } else {
-      setSuggestions([]); // Clear suggestions if less than one letter
+      setSuggestions([]);
+    }
+  };
+
+  const handleProfessorSelected = (selectedItem: Professor | null) => {
+    if (selectedItem) {
+      setFormData({
+        ...formData,
+        firstName: selectedItem.fName,
+        lastName: selectedItem.lName,
+        professorId: selectedItem.id,
+      });
     }
   };
 
   return (
     <Downshift
       onInputValueChange={handleInputChange}
-      onSelect={(selectedItem) => {
-        if (selectedItem) {
-          console.log('Downshift: Selected Item', selectedItem);
-          onProfessorSelected(selectedItem);
-        }
-      }}
+      onSelect={handleProfessorSelected}
       itemToString={(item) => (item ? `${item.lName}, ${item.fName}` : '')}
     >
       {({ getInputProps, getItemProps, isOpen, inputValue, highlightedIndex }) => (
         <div style={{ position: 'relative' }}>
-          <input {...getInputProps({ placeholder: 'Search...' })} />
-          {isOpen && suggestions?.length > 0 && (
+          <input
+            className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600"
+            {...getInputProps({
+              placeholder: 'Search by last name...',
+              value: formData.lastName,
+              onChange: (e) => {
+                handleInputChange(e.target.value);
+                setFormData((prevData) => ({ ...prevData, lastName: e.target.value }));
+              },
+              onBlur: () => {
+                // No need to clear the first name field
+              },
+            })}
+          />
+          {isOpen && suggestions.length > 0 && (
             <div style={dropdownStyles as CSSProperties}>
               {suggestions.map((item, index) => (
                 <div
