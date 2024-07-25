@@ -1,11 +1,23 @@
 ---
-export const prerender = true;
-
 import EvaluationFormComponent from '~/components/core/EvaluationFormComponent';
 import Layout from '~/layouts/PageLayout.astro';
+import { getProfessorById } from '~/service/professor-service';
 const metadata = {
   title: 'Rate My Professor: Create An Evaluation',
 };
+
+let professorId = Astro.url.searchParams.get('professorId');
+
+let professor = professorId && (await getProfessorById(Astro, Number(professorId)));
+
+console.log('professor:', professor);
+
+// look up school and professor info and pass to EvaluationFormComponent
 ---
 
-<Layout metadata={metadata}> <EvaluationFormComponent client:only="react" /> </Layout>
+<Layout metadata={metadata}>
+  <script define:vars={{ professor }}>
+    window.professor = professor;
+  </script>
+  <EvaluationFormComponent client:only="react" />
+</Layout>
