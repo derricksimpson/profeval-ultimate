@@ -2,7 +2,7 @@ import type { Evaluation, EvaluationData } from '~/models/Evaluation';
 import { measureQuery } from './metrics-service';
 import { EvaluationMap } from '~/models/EvaluationMap';
 
-export const getEvaluationsBySchool = async (id: number) => {};
+export const getEvaluationsBySchool = async (id: number) => { };
 
 export const getEvaluationsBySchoolLetter = async (Astro, id: number, letter: string) => {
   const DB = Astro.locals.runtime.env.DB;
@@ -178,9 +178,9 @@ export const getEvaluationSearchResults = async (Astro, params) => {
       params.push(lastName + '%');
     }
 
-    sql += 'order by p.lName, p.fName limit 25';
+    sql += 'order by p.lName, p.fName limit 26';
 
-    console.log('Query', sql);
+    //console.log('Query', sql);
 
     let response = await DB.prepare(sql)
       .bind(...params)
