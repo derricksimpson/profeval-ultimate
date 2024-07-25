@@ -15,7 +15,7 @@ interface SearchCoursesProps {
   schoolId: number;
   courseSubjects: Subject[];
   onSearchResults: (professors: ProfsesorSearchResults) => void;
-  handleSearch: (searchSubject: string, searchCourseNumber: string, searchProfessorLastName: string, page: number) => void;
+  //handleSearch: (searchSubject: string, searchCourseNumber: string, searchProfessorLastName: string, page: number) => void;
   initialSubject?: string;
   initialCourseNumber?: string;
   initialProfessorLastName?: string;

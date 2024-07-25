@@ -139,6 +139,7 @@ const ProfessorSearchComponent = ({
       <TableComponent schoolId={schoolId} schoolURL={schoolName} professors={professors} />
       {loadMore && (<button className="btn-primary" onClick={() => setLoadMore(false)}>Load More</button>)}
 
+
     </div>
   );
 };
