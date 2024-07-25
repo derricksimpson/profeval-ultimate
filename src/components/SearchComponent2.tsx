@@ -51,7 +51,7 @@ const SearchComponent = ({ initialQuery = '' }) => {
               name="for"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 rounded-t-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-400 dark:focus:border-gray-400 focus:z-10 sm:text-sm bg-white dark:bg-gray-800"
+              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:focus:ring-gray-400 dark:focus:border-gray-400 focus:z-10 sm:text-sm bg-white dark:bg-gray-800"
               placeholder="professor name; school name or abbr"
               required
             />
@@ -60,7 +60,7 @@ const SearchComponent = ({ initialQuery = '' }) => {
             <input
               type="submit"
               value="Search"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white btn-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative cursor-pointer w-full flex px-6  py-2 bg-orange-600 text-white font-semibold shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
             />
           </div>
         </form>
