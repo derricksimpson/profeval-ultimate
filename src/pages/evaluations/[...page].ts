@@ -14,6 +14,9 @@ http://localhost:4321/evaluations/list.asp?CurSchoolID=908&Subject=&CallNumber=&
 http://localhost:4321/evaluations/list.asp?Subject=CS&CallNumber=&LName=
 
 
+ With Page number
+http://localhost:4321/evaluations/list.asp?CurSchoolID=908&Subject=&CallNumber=&LName=Li&Sort=3&Page=5
+
 -- Specific IDs
 
 
@@ -25,10 +28,7 @@ http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=CS&CallNumber
 http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=CS&CallNumber=&LName=&Sort=3&ID=5360
 http://localhost:4321/evaluations/view.asp?Subject=&CallNumber=&LName=Browder&Sort=0&ID=18197
 
-http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=&CallNumber=&LName=S&Sort=6&ID=9738&options=next
-
-
-http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subject=&CallNumber=&LName=&Sort=4&ID=14169
+http://localhost:4321/evaluations/view.asp?CurSchoolID=908&Subjevaluations/view.asp?CurSchoolID=908&Subject=&CallNumber=&LName=&Sort=4&ID=14169
 -> to  http://localhost:4321/professors/Western%20Kentucky%20University/908/Hardin-Joe%20M./2142?evaluationId=14169
 
 */
