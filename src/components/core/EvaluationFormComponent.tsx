@@ -363,14 +363,15 @@ const EvaluationFormComponent = () => {
         </div>
       </div>
       <div className="mt-6 text-right">
-        <input
+        {step > 1 && <input
           type="button"
           value="Previous"
           onClick={() => {
             nextStep((step - 1) as Step);
           }}
-          className="px-6 py-2 bg-gray-600 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
+          className="px-6 py-2 bg-gray-600 text-white font-semiboldshadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
         />
+        }
         {step < 4 && (
           <>
             <input
@@ -379,16 +380,16 @@ const EvaluationFormComponent = () => {
               onClick={() => {
                 nextStep((step + 1) as Step);
               }}
-              className="px-6 ml-2 py-2 bg-orange-600 text-white font-semibold rounded-md shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
+              className="px-6 ml-2 py-2 bg-orange-600 text-white font-semibold shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
             />
           </>
         )}
         {step == 4 && (
           <button
             type="submit"
-            className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-md shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
+            className="px-6 ml-2 py-2 bg-orange-600 text-white font-semibold shadow-md hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 dark:bg-orange-400 dark:hover:bg-orange-500"
           >
-            Post
+            Post Evaluation
           </button>
         )}
       </div>
