@@ -3,24 +3,39 @@ import Layout from '~/layouts/PageLayout.astro';
 import ProfessorSearchComponent from '~/components/ProfessorSearchComponent';
 import * as evaluationService from '~/service/evaluation-service';
 import { getProfessorsBySchoolAndLetter } from '~/service/professor-service';
+import { getEvaluationSearchResults } from '~/service/evaluation-service';
 import { getSchoolById } from '~/service/school-service';
 
-const { path } = Astro.params;
+const { path, search } = Astro.params;
 const [_, schoolIdStr, letter] = path.split('/');
+const searchParams = new URLSearchParams(search);
 
 let schoolId = Number(schoolIdStr);
+let subject = searchParams.get('Subject') || '';
+let callNumber = searchParams.get('CallNumber') || '';
+let lName = searchParams.get('LName') || '';
+let page = searchParams.get('Page') || 1;
+let sort = searchParams.get('Sort'); // Not yet sure we want to sort.
 
 const school = await getSchoolById(Astro, schoolId);
 const schoolName = school?.Name || '';
 
-// TODO: Parallelize
+// Fetch initial subjects
 const initialSubjects = await evaluationService.getAllSubjects(Astro, schoolId);
 
-const initialProfs = letter && ((await getProfessorsBySchoolAndLetter(Astro, schoolId, letter)) as any);
+let initialProfs = [];
+
+if (letter) {
+  // Fetch professors by letter if letter is provided
+  initialProfs = await getProfessorsBySchoolAndLetter(Astro, schoolId, letter);
+} else if (subject || callNumber || lName) {
+  // Fetch professors based on search criteria
+  initialProfs = await getEvaluationSearchResults(Astro, { schoolId, subject, callNumber, lastName: lName });
+}
 
 const metadata = {
   title: 'Professors at ' + schoolName + ' - Rate My Professor Here',
-  description: 'Rate your professors at ' + schoolName + ' and help other students stay informed informed.',
+  description: 'Rate your professors at ' + schoolName + ' and help other students stay informed.',
 };
 ---
 
@@ -34,6 +49,9 @@ const metadata = {
       initialProfessors={initialProfs}
       schoolName={schoolName}
       client:load={true}
+      initialSubject={subject}
+      initialCourseNumber={callNumber}
+      initialProfessorLastName={lName}
     />
   </div>
 </Layout>

@@ -1,6 +1,6 @@
 import LettersComponent from '~/components/core/LettersComponent';
 import TableComponent from '~/components/core/TableComponent';
-import SearchCourses from '~/components/SearchCourses';
+import SearchCourses, { type ProfsesorSearchResults } from '~/components/SearchCourses';
 import { useEffect, useState } from 'react';
 import type { Professor } from '~/models/Professor';
 
@@ -11,6 +11,9 @@ interface ProfessorSearchComponentProps {
   schoolName: string;
   initialSubjects?: any;
   initialProfessors?: Professor[];
+  initialSubject?: string;
+  initialCourseNumber?: string;
+  initialProfessorLastName?: string;
 }
 
 const ProfessorSearchComponent = ({
@@ -20,9 +23,16 @@ const ProfessorSearchComponent = ({
   initialSubjects,
   initialProfessors,
   schoolName,
+  initialSubject = '',
+  initialCourseNumber = '',
+  initialProfessorLastName = '',
 }: ProfessorSearchComponentProps) => {
-  const [professors, setProfessors] = useState(initialProfessors);
-  const [courseSubjects, setCourseSubjects] = useState(initialSubjects);
+  const [professors, setProfessors] = useState(initialProfessors || []);
+  const [courseSubjects, setCourseSubjects] = useState(initialSubjects || []);
+  const [subject, setSubject] = useState(initialSubject);
+  const [courseNumber, setCourseNumber] = useState(initialCourseNumber);
+  const [professorLastName, setProfessorLastName] = useState(initialProfessorLastName);
+  const [loadMore, setLoadMore] = useState(false);
 
   const fetchSubjects = async (schoolId) => {
     if (schoolId) {
@@ -32,8 +42,60 @@ const ProfessorSearchComponent = ({
     }
   };
 
+  const handleSearch = async (searchSubject, searchCourseNumber, searchProfessorLastName) => {
+    const url = new URL('/api/evals', window.location.origin);
+
+    url.searchParams.append('Subject', searchSubject);
+    url.searchParams.append('CurSchoolID', schoolId.toString());
+
+    if (searchCourseNumber) {
+      url.searchParams.append('CallNumber', searchCourseNumber);
+    }
+
+    if (searchProfessorLastName) {
+      url.searchParams.append('LName', searchProfessorLastName);
+    }
+
+    try {
+      const response = await fetch(url.toString());
+      const data = await response.json();
+
+      setProfessors(data);
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+
+  const updateStateFromURL = () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const newSubject = searchParams.get('Subject') || '';
+    const newCourseNumber = searchParams.get('CallNumber') || '';
+    const newProfessorLastName = searchParams.get('LName') || '';
+
+    setSubject(newSubject);
+    setCourseNumber(newCourseNumber);
+    setProfessorLastName(newProfessorLastName);
+
+    handleSearch(newSubject, newCourseNumber, newProfessorLastName);
+  };
+
   useEffect(() => {
     fetchSubjects(schoolId);
+  }, [schoolId]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      updateStateFromURL();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    // Initial search on component mount
+    updateStateFromURL();
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, [schoolId]);
 
   useEffect(() => {
@@ -46,8 +108,9 @@ const ProfessorSearchComponent = ({
     }
   }, [letter]);
 
-  const onProfessorResults = (professors) => {
-    setProfessors(professors);
+  const onProfessorResults = (results: ProfsesorSearchResults) => {
+    setProfessors(results.professors);
+    setLoadMore(results.hasMore);
   };
 
   return (
@@ -60,6 +123,9 @@ const ProfessorSearchComponent = ({
           schoolId={schoolId}
           courseSubjects={courseSubjects}
           onSearchResults={onProfessorResults}
+          initialSubject={subject}
+          initialCourseNumber={courseNumber}
+          initialProfessorLastName={professorLastName}
         />
       </div>
 
@@ -70,7 +136,9 @@ const ProfessorSearchComponent = ({
         </div>
       </div>
 
-      {<TableComponent schoolId={schoolId} schoolURL={schoolName} professors={professors} />}
+      <TableComponent schoolId={schoolId} schoolURL={schoolName} professors={professors} />
+      {loadMore && (<button className="btn-primary" onClick={() => setLoadMore(false)}>Load More</button>)}
+
     </div>
   );
 };
