@@ -15,7 +15,7 @@ export default ({ schoolId, schoolName, activeLetter }: Props) => {
   let href = `/school/${schoolName}/${schoolId}/`;
 
   return (
-    <div className="max-w-screen-xl mx-auto mt-2 px-4 text-gray-600 md:px-8">
+    <div className="max-w-screen-xl mx-auto mt-2 px-4 text-gray-600 ">
       <div aria-label="Pagination">
         <ul className="hidden lg:inline-block">
           {pages.map((item, idx) => (

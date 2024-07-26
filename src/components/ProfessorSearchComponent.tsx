@@ -1,8 +1,8 @@
-import LettersComponent from '~/components/core/LettersComponent';
 import TableComponent from '~/components/core/TableComponent';
 import SearchCourses, { type ProfsesorSearchResults } from '~/components/SearchCourses';
 import { useEffect, useState } from 'react';
 import type { Professor } from '~/models/Professor';
+import LettersComponent from './core/LettersComponent';
 
 interface ProfessorSearchComponentProps {
   context?: any;
@@ -114,10 +114,10 @@ const ProfessorSearchComponent = ({
   };
 
   return (
-    <div className="container">
-      <h1 className="text-2xl md:text-3xl font-bold">{schoolName}</h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">{schoolName}</h1>
 
-      <div className="ml-12">
+      <div className="mb-6">
         <SearchCourses
           context={context}
           schoolId={schoolId}
@@ -126,20 +126,24 @@ const ProfessorSearchComponent = ({
           initialSubject={subject}
           initialCourseNumber={courseNumber}
           initialProfessorLastName={professorLastName}
+          schoolName={schoolName}
+          activeLetter={letter}
         />
       </div>
 
-      <div>
-        <h2 className="ml-12 mt-3 font-bold">Find your professor by last name</h2>
-        <div className="mt-4">
-          <LettersComponent schoolId={String(schoolId)} schoolName={schoolName} activeLetter={letter} />
-        </div>
-      </div>
+      {/* <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-4">Find your professor by last name</h2>
+        <LettersComponent schoolId={String(schoolId)} schoolName={schoolName} activeLetter={letter} />
+      </div> */}
 
       <TableComponent schoolId={schoolId} schoolURL={schoolName} professors={professors} />
-      {loadMore && (<button className="btn-primary" onClick={() => setLoadMore(false)}>Load More</button>)}
-
-
+      {loadMore && (
+        <div className="mt-4 text-center">
+          <button className="btn-primary px-4 py-2  text-white rounded-md shadow-md" onClick={() => setLoadMore(false)}>
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 };
