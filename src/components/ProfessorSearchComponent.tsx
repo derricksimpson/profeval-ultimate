@@ -27,12 +27,12 @@ const ProfessorSearchComponent = ({
   initialCourseNumber = '',
   initialProfessorLastName = '',
 }: ProfessorSearchComponentProps) => {
-  const [professors, setProfessors] = useState(initialProfessors || []);
+  const [professors, setProfessors] = useState(initialProfessors?.slice(0, 25) || []);
   const [courseSubjects, setCourseSubjects] = useState(initialSubjects || []);
   const [subject, setSubject] = useState(initialSubject);
   const [courseNumber, setCourseNumber] = useState(initialCourseNumber);
   const [professorLastName, setProfessorLastName] = useState(initialProfessorLastName);
-  const [loadMore, setLoadMore] = useState(false);
+  const [loadMore, setLoadMore] = useState(initialProfessors ? initialProfessors.length > 25 : false);
 
   const fetchSubjects = async (schoolId) => {
     if (schoolId) {
