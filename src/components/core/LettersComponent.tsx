@@ -31,25 +31,6 @@ export default ({ schoolId, schoolName, activeLetter }: Props) => {
           ))}
         </ul>
       </div>
-      {/* On mobile version  - revert to a Select box*/}
-      <div className="lg:hidden">
-        <div className="flex flex-col">
-          <select
-            value={currentPage}
-            onChange={(e) => {
-              setCurrentPage(e.target.value);
-              window.location.href = href + e.target.value;
-            }}
-            className="w-full h-10 px-4 py-2 border border-gray-300 rounded-md "
-          >
-            {pages.map((item, idx) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
     </div>
   );
 };
