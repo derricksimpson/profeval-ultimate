@@ -171,7 +171,17 @@ const EvaluationFormComponent = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Submit form data to the backend
+    if ((window as any).turnstileToken) {
+      fetch('/api/evaluations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json)',
+        }
+      });
+    }
+    else {
+      alert('You must verify that you are not a robot before submitting an evaluation.');
+    }
   };
 
   const onProfessorSelected = (professor: Professor) => {
@@ -362,9 +372,7 @@ const EvaluationFormComponent = () => {
           />
         </div>
       </div>
-      <div className="mt-6 text-right">
-        <div id="example-container"></div>
-      </div>
+
 
       <div className="mt-6 text-right">
         {step > 1 && <input
@@ -396,6 +404,9 @@ const EvaluationFormComponent = () => {
             Post Evaluation
           </button>
         )}
+      </div>
+      <div className="mt-6 text-right">
+        <div id="tswidget-container"></div>
       </div>
     </form>
   );

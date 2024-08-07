@@ -11,8 +11,6 @@ let professorId = Astro.url.searchParams.get('professorId');
 
 let professor = professorId && (await getProfessorById(Astro, Number(professorId)));
 
-console.log('professor:', professor);
-
 // look up school and professor info and pass to EvaluationFormComponent
 ---
 
@@ -25,14 +23,18 @@ console.log('professor:', professor);
 
 <script is:inline>
   function initTurnstile() {
-    // seach for element
-    if (document.getElementById('example-container')) {
-      turnstile.render('#example-container', {
+    if (document.getElementById('tswidget-container')) {
+      window.tsWidgetId = turnstile.render('#tswidget-container', {
         sitekey: '0x4AAAAAAAeljwsqh-QqLV4T',
         callback: function (token) {
+          window.turnstileToken = token;
           console.log(`Challenge Success ${token}`);
         },
       });
+
+      window.removeTsWidget = function () {
+        document.getElementById('tswidget-container').style.display = 'none';
+      };
     } else {
       setTimeout(initTurnstile, 1000);
     }
