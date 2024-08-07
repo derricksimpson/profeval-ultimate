@@ -61,7 +61,7 @@ export async function GET(context: APIContext) {
       let lname = url.searchParams.get('LName');
       let schoolId = url.searchParams.get('CurSchoolID');
 
-      return permRedirect(`/school/school_name/${schoolId}?lastname=${lname}`);
+      return permRedirect(`/school/school_name/${schoolId}?LName=${lname}`);
     }
   }
 
