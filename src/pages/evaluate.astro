@@ -2,6 +2,7 @@
 import EvaluationFormComponent from '~/components/core/EvaluationFormComponent';
 import Layout from '~/layouts/PageLayout.astro';
 import { getProfessorById } from '~/service/professor-service';
+
 const metadata = {
   title: 'Rate My Professor: Create An Evaluation',
 };
@@ -20,4 +21,12 @@ console.log('professor:', professor);
     window.professor = professor;
   </script>
   <EvaluationFormComponent client:only="react" />
+  <div class="cf-turnstile" data-sitekey="yourSitekey" data-callback="javascriptCallback"></div>
 </Layout>
+
+<script is:inline>
+  function javascriptCallback(token) {
+    console.log('cf-turnstile callback');
+    window.cfTurnstileResult = token;
+  }
+</script>
