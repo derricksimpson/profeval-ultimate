@@ -363,6 +363,10 @@ const EvaluationFormComponent = () => {
         </div>
       </div>
       <div className="mt-6 text-right">
+        <div id="example-container"></div>
+      </div>
+
+      <div className="mt-6 text-right">
         {step > 1 && <input
           type="button"
           value="Previous"

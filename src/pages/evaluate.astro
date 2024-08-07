@@ -21,12 +21,26 @@ console.log('professor:', professor);
     window.professor = professor;
   </script>
   <EvaluationFormComponent client:only="react" />
-  <div class="cf-turnstile" data-sitekey="0x4AAAAAAAeljwsqh-QqLV4T" data-callback="javascriptCallback"></div>
 </Layout>
 
 <script is:inline>
-  function javascriptCallback(token) {
-    console.log('cf-turnstile callback');
-    window.cfTurnstileResult = token;
+  function initTurnstile() {
+    // seach for element
+    if (document.getElementById('example-container')) {
+      turnstile.render('#example-container', {
+        sitekey: '0x4AAAAAAAeljwsqh-QqLV4T',
+        callback: function (token) {
+          console.log(`Challenge Success ${token}`);
+        },
+      });
+    } else {
+      setTimeout(initTurnstile, 1000);
+    }
   }
+  window.onloadTurnstileCallback = function () {
+    initTurnstile();
+  };
 </script>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer
+></script>"
